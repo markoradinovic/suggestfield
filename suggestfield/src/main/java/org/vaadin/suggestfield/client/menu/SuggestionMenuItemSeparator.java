@@ -15,7 +15,7 @@ public class SuggestionMenuItemSeparator extends UIObject {
 	private SuggestionMenuBar parentMenu;
 
 	/**
-	 * Constructs a new {@link MenuItemSeparator}.
+	 * Constructs a new {@link SuggestionMenuItemSeparator}.
 	 */
 	@SuppressWarnings("deprecation")
 	public SuggestionMenuItemSeparator() {

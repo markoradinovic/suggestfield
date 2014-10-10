@@ -138,7 +138,7 @@ public class SuggestionMenuBar extends Widget {
 	}
 
 	/**
-	 * Adds a thin line to the {@link MenuBar} to separate sections of
+	 * Adds a thin line to the {@link SuggestionMenuBar} to separate sections of
 	 * {@link SuggestionMenuItem}s.
 	 *
 	 * @return the {@link SuggestionMenuItemSeparator} object created
@@ -148,7 +148,7 @@ public class SuggestionMenuBar extends Widget {
 	}
 
 	/**
-	 * Adds a thin line to the {@link MenuBar} to separate sections of
+	 * Adds a thin line to the {@link SuggestionMenuBar} to separate sections of
 	 * {@link SuggestionMenuItem}s.
 	 *
 	 * @param separator
@@ -196,7 +196,7 @@ public class SuggestionMenuBar extends Widget {
 
 	/**
 	 * Get the index of a {@link SuggestionMenuItem}.
-	 *
+	 * @param item SuggestionMenuItem
 	 * @return the index of the item, or -1 if it is not contained by this
 	 *         MenuBar
 	 */
@@ -206,7 +206,7 @@ public class SuggestionMenuBar extends Widget {
 
 	/**
 	 * Get the index of a {@link SuggestionMenuItemSeparator}.
-	 *
+	 * @param item SuggestionMenuItemSeparator
 	 * @return the index of the separator, or -1 if it is not contained by this
 	 *         MenuBar
 	 */
@@ -250,7 +250,7 @@ public class SuggestionMenuBar extends Widget {
 	}
 
 	/**
-	 * Adds a thin line to the {@link MenuBar} to separate sections of
+	 * Adds a thin line to the {@link SuggestionMenuBar} to separate sections of
 	 * {@link SuggestionMenuItem}s at the specified index.
 	 *
 	 * @param beforeIndex
@@ -264,7 +264,7 @@ public class SuggestionMenuBar extends Widget {
 	}
 
 	/**
-	 * Adds a thin line to the {@link MenuBar} to separate sections of
+	 * Adds a thin line to the {@link SuggestionMenuBar} to separate sections of
 	 * {@link SuggestionMenuItem}s at the specified index.
 	 *
 	 * @param separator

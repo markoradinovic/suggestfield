@@ -33,8 +33,8 @@ public class SuggestField extends AbstractField<Object> implements
 		
 		/**
 		 * Provide suggestions based on query string
-		 * @param query
-		 * @return
+		 * @param query Search string
+		 * @return list of Items
 		 */
 		public List<Object> searchItems(String query);
 	}
