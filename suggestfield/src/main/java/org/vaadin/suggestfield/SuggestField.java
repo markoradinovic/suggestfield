@@ -148,6 +148,26 @@ public class SuggestField extends AbstractField<Object> implements
 		getState().trimQuery = trimQuery;
 	}
 	
+	/**
+	 * Set width of popup. Width must be in <code>px</code>. For auto-width set <code>0</code> value.
+	 * @param width
+	 */
+	public void setPopupWidth(int width) {
+		if (width == 0) {
+			getState().popupWidth = null;
+		} else {
+			getState().popupWidth = width + "px";
+		}
+	}
+	
+	/**
+	 * Return current popup width.
+	 * @return <code>null</code> if is auto width.
+	 */
+	public String getPopupWidth() {
+		return getState().popupWidth;
+	}
+	
 	@Override
 	public void focus() {
 		super.focus();

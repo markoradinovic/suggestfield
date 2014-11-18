@@ -5,7 +5,7 @@
 	<groupId>org.vaadin</groupId>
 	<artifactId>suggestfield-demo</artifactId>
 	<packaging>war</packaging>
-	<version>0.0.1</version>
+	<version>0.0.2</version>
 	<name>SuggestField Add-on Demo</name>
 
 	<properties>

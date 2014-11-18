@@ -80,6 +80,9 @@ public class DemoUI extends UI {
 		search1.setInputPrompt("Type country name");
 		search1.setEnabled(true);
 		search1.setWidth("100%");
+		
+		search1.setPopupWidth(600);
+		
 		search1.addFocusListener(new FocusListener() {
 
 			@Override

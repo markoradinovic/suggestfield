@@ -85,6 +85,8 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 	public int minimumQueryCharacters = 3;
 	private SuggestFieldSuggestion currentSuggestion;
 	
+	public String popupWidth = null;
+	
 	/*
 	 * Callback for selecting suggestion
 	 */
@@ -507,7 +509,15 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 
 			offsetHeight = getOffsetHeight();
 
-			final int desiredWidth = box.getOffsetWidth();
+			int desiredWidth = box.getOffsetWidth();
+			if (popupWidth != null) {
+				try {
+					desiredWidth = Integer.valueOf(popupWidth.replace("px", ""));
+				} catch (NumberFormatException e) {
+					desiredWidth = box.getOffsetWidth();
+				}
+				
+			}
 			Element menuFirstChild = getWidget().getElement().getFirstChild()
 					.cast();
 			int naturalMenuWidth = menuFirstChild.getOffsetWidth();

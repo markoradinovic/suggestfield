@@ -72,7 +72,7 @@ Contributions are welcome, but there are no guarantees that they are accepted as
 
 Add-on is distributed under Apache License 2.0. For license terms, see LICENSE.txt.
 
-MyComponent is written by Marko Radinovic.
+SuggestField is written by Marko Radinovic.
 
 # Developer Guide
 

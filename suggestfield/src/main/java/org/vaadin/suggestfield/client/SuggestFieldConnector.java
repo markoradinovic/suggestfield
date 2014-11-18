@@ -60,6 +60,7 @@ public class SuggestFieldConnector extends AbstractFieldConnector implements
 		getWidget().setInputPrompt(getState().inputPrompt);
 		getWidget().trimQuery = getState().trimQuery;
 		getWidget().minimumQueryCharacters = getState().minimumQueryCharacters;
+		getWidget().popupWidth = getState().popupWidth;
 
 		if (getState().readOnly || !getState().enabled) {
 			getWidget().setEnabled(false);
