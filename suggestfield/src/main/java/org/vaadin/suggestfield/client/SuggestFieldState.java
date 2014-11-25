@@ -11,4 +11,5 @@ public class SuggestFieldState extends AbstractFieldState {
 	public int minimumQueryCharacters = 3;
 	public boolean trimQuery = true;
 	public String popupWidth = null;
+	public boolean allowNewItem = false;
 }

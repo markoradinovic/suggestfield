@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 
 import org.vaadin.suggestfield.BeanSuggestionConverter;
 import org.vaadin.suggestfield.SuggestField;
+import org.vaadin.suggestfield.SuggestField.NewItemsHandler;
 import org.vaadin.suggestfield.SuggestField.SuggestionHandler;
 import org.vaadin.suggestfield.client.SuggestFieldSuggestion;
 
@@ -42,6 +43,8 @@ public class DemoUI extends UI {
 	}
 
 	private final SuggestField search1 = new SuggestField();
+	
+	long id = 0;
 
 	@Override
 	protected void init(VaadinRequest request) {
@@ -138,7 +141,20 @@ public class DemoUI extends UI {
 
 			}
 		});
-
+		
+		/*
+		 * Allowing new items 
+		 */
+		search.setNewItemsHandler(new NewItemsHandler() {
+			
+			@Override
+			public Object addNewItem(String newItemText) {
+				final CountryBean newValue = new CountryBean(id++, newItemText);
+				items.add(newValue);
+				return newValue;
+			}
+		});
+		search.setNewItemsAllowed(true);
 	}
 	
 	private class CountrySuggestionConverter extends BeanSuggestionConverter {
@@ -224,7 +240,7 @@ public class DemoUI extends UI {
 	}
 
 	private void buildItems() {
-		long id = 0;
+		
 		// @formatter:off
 		items.addAll(Arrays
 				.asList(new CountryBean(id++, "Afghanistan"),

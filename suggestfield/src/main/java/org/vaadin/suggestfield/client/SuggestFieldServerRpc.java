@@ -7,4 +7,6 @@ public interface SuggestFieldServerRpc extends ServerRpc {
 	public void searchSuggestions(String query);
 
 	public void onSuggestionSelected(SuggestFieldSuggestion suggestion);
+	
+	public void addNewSuggestion(String suggestion);
 }

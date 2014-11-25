@@ -68,6 +68,7 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 	 */
 	public interface FindSuggestionsListener {
 		void findSuggestions(String query);
+		void addNewSuggestion(String suggestion);
 	}
 
 	public ApplicationConnection client;
@@ -86,6 +87,7 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 	private SuggestFieldSuggestion currentSuggestion;
 	
 	public String popupWidth = null;
+	public boolean allowNewItem;
 	
 	/*
 	 * Callback for selecting suggestion
@@ -185,7 +187,14 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 				case KeyCodes.KEY_TAB:
 					Suggestion suggestion = getCurrentSelection();
 					if (suggestion == null) {
+						/*
+						 * Allow for new items
+						 */
+						if (allowNewItem) {
+							handleNewSuggestion();
+						} 
 						hideSuggestions();
+						
 					} else {
 						setNewSelection(suggestion);
 					}
@@ -229,6 +238,12 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 		box.addKeyUpHandler(events);
 		box.addValueChangeHandler(events);
 		box.addBlurHandler(events);
+	}
+	
+	private void handleNewSuggestion() {
+		if (suggestionListener != null && box.getText().length() >= minimumQueryCharacters ) {
+			suggestionListener.addNewSuggestion(box.getText());
+		}
 	}
 
 	public void resetText() {

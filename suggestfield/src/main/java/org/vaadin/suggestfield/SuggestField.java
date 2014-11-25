@@ -39,6 +39,15 @@ public class SuggestField extends AbstractField<Object> implements
 		public List<Object> searchItems(String query);
 	}
 	
+	public interface NewItemsHandler extends Serializable {
+		/**
+		 * Provide new suggestion based on newItemText
+		 * @param newItemText typed by user
+		 * @return new Item
+		 */
+		public Object addNewItem(String newItemText);
+	}
+	
 	public interface SuggestionConverter extends Serializable {
 		
 		public SuggestFieldSuggestion toSuggestion(Object item);
@@ -59,6 +68,7 @@ public class SuggestField extends AbstractField<Object> implements
 	
 	private SuggestionConverter suggestionConverter = new StringSuggestionConverter();
 	private SuggestionHandler suggestionHandler;
+	private NewItemsHandler newItemsHandler;
 
 	public SuggestField() {
 		registerRpc(this, SuggestFieldServerRpc.class);
@@ -98,6 +108,13 @@ public class SuggestField extends AbstractField<Object> implements
 			setValue(suggestionConverter.toItem(suggestion), false);
 		}
 		
+	}
+	
+	@Override
+	public void addNewSuggestion(String suggestion) {
+		if (getNewItemsHandler() != null) {
+			setValue(newItemsHandler.addNewItem(suggestion));
+		}
 	}
 	
 	@Override
@@ -168,6 +185,25 @@ public class SuggestField extends AbstractField<Object> implements
 		return getState().popupWidth;
 	}
 	
+	/**
+     * Does the select allow adding new options by the user.
+     * 
+     * @return True if additions are allowed.
+     */
+    public boolean isNewItemsAllowed() {
+        return getState().allowNewItem;
+    }
+
+    /**
+     * Enables or disables possibility to add new items by the user.
+     * 
+     * @param allowNewItems
+     * 
+     */
+    public void setNewItemsAllowed(boolean allowNewItems) {
+    	getState().allowNewItem = allowNewItems;
+    }
+	
 	@Override
 	public void focus() {
 		super.focus();
@@ -236,4 +272,14 @@ public class SuggestField extends AbstractField<Object> implements
 	public void setSuggestionConverter(SuggestionConverter suggestionConverter) {
 		this.suggestionConverter = suggestionConverter;
 	}
+
+	public NewItemsHandler getNewItemsHandler() {
+		return newItemsHandler;
+	}
+
+	public void setNewItemsHandler(NewItemsHandler newItemsHandler) {
+		this.newItemsHandler = newItemsHandler;
+	}
+
+	
 }

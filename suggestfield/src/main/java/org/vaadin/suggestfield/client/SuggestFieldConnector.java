@@ -61,6 +61,7 @@ public class SuggestFieldConnector extends AbstractFieldConnector implements
 		getWidget().trimQuery = getState().trimQuery;
 		getWidget().minimumQueryCharacters = getState().minimumQueryCharacters;
 		getWidget().popupWidth = getState().popupWidth;
+		getWidget().allowNewItem = getState().allowNewItem;
 
 		if (getState().readOnly || !getState().enabled) {
 			getWidget().setEnabled(false);
@@ -77,6 +78,11 @@ public class SuggestFieldConnector extends AbstractFieldConnector implements
 	@Override
 	public void findSuggestions(String query) {
 		serverRpc.searchSuggestions(query);
+	}
+	
+	@Override
+	public void addNewSuggestion(String suggestion) {
+		serverRpc.addNewSuggestion(suggestion);
 	}
 
 	@Override
@@ -110,5 +116,7 @@ public class SuggestFieldConnector extends AbstractFieldConnector implements
 		getWidget().setSuggestions(suggestions);
 
 	}
+
+	
 
 }
