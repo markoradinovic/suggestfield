@@ -50,6 +50,13 @@ Another way of debugging client-side is superdev mode. To enable it, uncomment d
 ### Version 0.0.1
 - First release
 
+### Version 0.0.2
+- Ability to set popup width
+
+### Version 0.0.3
+- Allow for adding new items 
+
+
 ## Roadmap
 
 This component is developed as a hobby with no public roadmap or any guarantees of upcoming releases.

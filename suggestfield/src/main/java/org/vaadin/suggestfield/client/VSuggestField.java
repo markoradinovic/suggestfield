@@ -242,7 +242,13 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 	
 	private void handleNewSuggestion() {
 		if (suggestionListener != null && box.getText().length() >= minimumQueryCharacters ) {
-			suggestionListener.addNewSuggestion(box.getText());
+			/*
+			 * avoid duplicates
+			 */
+			String currentSuggestionText = (currentSuggestion != null) ? currentSuggestion.getReplacementString() : "";
+			if (!currentSuggestionText.equals(box.getText())) {
+				suggestionListener.addNewSuggestion(box.getText());
+			}
 		}
 	}
 
