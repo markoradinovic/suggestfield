@@ -123,11 +123,17 @@ public class SuggestField extends AbstractField<Object> implements
 			ConversionException, InvalidValueException {
 		
 		super.setValue(newFieldValue, repaintIsNotNeeded);
+	}
+	
+	@Override
+	protected void setInternalValue(Object newValue) {
+		super.setInternalValue(newValue);
 		/*
 		 * This allows for a new value to be sent to client if setValue was called before selecting suggestion
+		 * This must be here for BeanFieldGroup to work.
 		 */
 		if (suggestionConverter != null) {
-			getRpcProxy(SuggestFieldClientRpc.class).setCurrentSuggusetion(suggestionConverter.toSuggestion(newFieldValue));
+			getRpcProxy(SuggestFieldClientRpc.class).setCurrentSuggusetion(suggestionConverter.toSuggestion(newValue));
 		}
 	}
 
