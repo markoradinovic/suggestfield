@@ -27,7 +27,9 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
@@ -43,6 +45,7 @@ public class DemoUI extends UI {
 	}
 
 	private final SuggestField search1 = new SuggestField();
+	private final SuggestField search2 = new SuggestField();
 	
 	long id = 0;
 
@@ -65,7 +68,7 @@ public class DemoUI extends UI {
 			
 			@Override
 			public void buttonClick(ClickEvent event) {
-				search1.setValue(items.get(58));
+				search2.setValue(items.get(58));
 				
 			}
 		});
@@ -74,7 +77,7 @@ public class DemoUI extends UI {
 			
 			@Override
 			public void buttonClick(ClickEvent event) {
-				Notification.show("Value" + search1.getValue());
+				Notification.show("Value" + search2.getValue());
 				
 			}
 		});
@@ -83,27 +86,9 @@ public class DemoUI extends UI {
 		search1.setInputPrompt("Type country name");
 		search1.setEnabled(true);
 		search1.setWidth("100%");
-		
 		search1.setPopupWidth(600);
-		
-		search1.addFocusListener(new FocusListener() {
+		setUpAutocomplete(search1);
 
-			@Override
-			public void focus(FocusEvent event) {
-				System.out.println("Focus event");
-
-			}
-		});
-
-		search1.addBlurListener(new BlurListener() {
-
-			@Override
-			public void blur(BlurEvent event) {
-				System.out.println("Blur event");
-			}
-		});
-
-		// Show it in the middle of the screen
 		final VerticalLayout layout = new VerticalLayout();
 		layout.setStyleName("demoContentLayout");
 		layout.setWidth("400px");
@@ -116,8 +101,23 @@ public class DemoUI extends UI {
 		layout.addComponent(btnGetValue);
 
 		setContent(layout);
+		
+		/*
+		 * Testing in Tab
+		 */
+		search2.setInputPrompt("Type something");
+		search2.setWidth("400px");
+		setUpAutocomplete(search2);
+		
+		TabSheet tab = new TabSheet();
+		layout.addComponent(tab);
+		layout.setExpandRatio(tab, 1);
+		
+		tab.addTab(search2, "Search");
+		
+		tab.addTab(new Label("Suggest field demo"), "Demo");
 
-		setUpAutocomplete(search1);
+		
 	}
 
 	private void setUpAutocomplete(final SuggestField search) {
@@ -155,6 +155,23 @@ public class DemoUI extends UI {
 			}
 		});
 		search.setNewItemsAllowed(true);
+		
+		search.addFocusListener(new FocusListener() {
+
+			@Override
+			public void focus(FocusEvent event) {
+				System.out.println("Focus event");
+
+			}
+		});
+
+		search.addBlurListener(new BlurListener() {
+
+			@Override
+			public void blur(BlurEvent event) {
+				System.out.println("Blur event");
+			}
+		});
 	}
 	
 	private class CountrySuggestionConverter extends BeanSuggestionConverter {

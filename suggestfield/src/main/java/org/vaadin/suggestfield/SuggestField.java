@@ -117,6 +117,7 @@ public class SuggestField extends AbstractField<Object> implements
 		}
 	}
 	
+	
 	@Override
 	protected void setValue(Object newFieldValue, boolean repaintIsNotNeeded)
 			throws com.vaadin.data.Property.ReadOnlyException,
@@ -133,7 +134,8 @@ public class SuggestField extends AbstractField<Object> implements
 		 * This must be here for BeanFieldGroup to work.
 		 */
 		if (suggestionConverter != null) {
-			getRpcProxy(SuggestFieldClientRpc.class).setCurrentSuggusetion(suggestionConverter.toSuggestion(newValue));
+			//getRpcProxy(SuggestFieldClientRpc.class).setCurrentSuggusetion(suggestionConverter.toSuggestion(newValue));
+			getState().value = suggestionConverter.toSuggestion(newValue);
 		}
 	}
 

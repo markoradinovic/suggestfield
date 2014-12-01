@@ -6,6 +6,7 @@ import com.vaadin.shared.AbstractFieldState;
 public class SuggestFieldState extends AbstractFieldState {
 	// public List<AutocompleteFieldSuggestion> suggestions =
 	// Collections.emptyList();
+	public SuggestFieldSuggestion value = null;
 	public int delayMillis = 300;
 	public String inputPrompt = "";
 	public int minimumQueryCharacters = 3;

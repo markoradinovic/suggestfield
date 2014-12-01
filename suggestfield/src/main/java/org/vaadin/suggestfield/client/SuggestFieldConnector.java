@@ -72,7 +72,8 @@ public class SuggestFieldConnector extends AbstractFieldConnector implements
 				focusHandlerRegistration);
 		blurHandlerRegistration = EventHelper.updateBlurHandler(this,
 				blurHandlerRegistration);
-		getWidget().resetText();
+		getWidget().setCurrentSuggestion(getState().value);
+//		getWidget().resetText();
 	}
 
 	@Override
@@ -93,11 +94,11 @@ public class SuggestFieldConnector extends AbstractFieldConnector implements
 		getWidget().setCurrentSuggestion(suggestion);
 	}
 
-	@Override
-	public void setCurrentSuggusetion(SuggestFieldSuggestion suggestion) {
-		getWidget().setCurrentSuggestion(suggestion);
-
-	}
+//	@Override
+//	public void setCurrentSuggusetion(SuggestFieldSuggestion suggestion) {
+//		getWidget().setCurrentSuggestion(suggestion);
+//
+//	}
 
 	@Override
 	public void onBlur(BlurEvent event) {
