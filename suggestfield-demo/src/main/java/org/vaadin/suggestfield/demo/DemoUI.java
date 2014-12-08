@@ -19,6 +19,8 @@ import com.vaadin.annotations.Title;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.event.ShortcutAction;
+import com.vaadin.event.ShortcutListener;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
@@ -88,6 +90,11 @@ public class DemoUI extends UI {
 		search1.setWidth("100%");
 		search1.setPopupWidth(600);
 		setUpAutocomplete(search1);
+		
+		/*
+		 * GitHub issue #4
+		 */
+		search1.setShortCut(ShortcutAction.KeyCode.S, new int[] { ShortcutAction.ModifierKey.CTRL });
 
 		final VerticalLayout layout = new VerticalLayout();
 		layout.setStyleName("demoContentLayout");
@@ -95,6 +102,17 @@ public class DemoUI extends UI {
 		layout.setSpacing(true);
 		layout.setMargin(true);
 		layout.addComponent(search1);
+		
+		layout.addShortcutListener(new ShortcutListener("Ctrl+S",
+		        ShortcutAction.KeyCode.S,
+		        new int[] { ShortcutAction.ModifierKey.CTRL }) {
+			
+			@Override
+			public void handleAction(Object sender, Object target) {
+				System.out.println("ShortCut handled by Layout");
+				
+			}
+		});
 		
 		layout.addComponent(btnEnabled);
 		layout.addComponent(btnSetValue);
@@ -137,6 +155,7 @@ public class DemoUI extends UI {
 
 			@Override
 			public void valueChange(ValueChangeEvent event) {
+				System.out.println("SuugestField value changed");
 				Notification.show("Selected " + search.getValue());
 
 			}

@@ -68,6 +68,10 @@ public class SuggestFieldConnector extends AbstractFieldConnector implements
 		} else {
 			getWidget().setEnabled(true);
 		}
+		
+		getWidget().keyCode = getState().keyCode;
+		getWidget().modifierKeys = getState().modifierKeys;
+		
 		focusHandlerRegistration = EventHelper.updateFocusHandler(this,
 				focusHandlerRegistration);
 		blurHandlerRegistration = EventHelper.updateBlurHandler(this,

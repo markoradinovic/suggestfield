@@ -9,6 +9,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.editor.client.IsEditor;
 import com.google.gwt.editor.client.LeafValueEditor;
@@ -44,6 +45,7 @@ import com.google.gwt.user.client.ui.ValueBoxBase;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Util;
+import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.VTextField;
 
@@ -88,6 +90,9 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 	
 	public String popupWidth = null;
 	public boolean allowNewItem;
+	
+	public int keyCode = -1;
+	public int[] modifierKeys = new int[] {};
 	
 	/*
 	 * Callback for selecting suggestion
@@ -176,6 +181,12 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 				ValueChangeHandler<String>, BlurHandler {
 
 			public void onKeyDown(KeyDownEvent event) {
+				if (hasShortCut() && isValidShortCut(event)) {
+					handleOnKeyEvent();
+					VConsole.error("Key down");
+					return;
+				}
+				
 				switch (event.getNativeKeyCode()) {
 				case KeyCodes.KEY_DOWN:
 					moveSelectionDown();
@@ -185,19 +196,20 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 					break;
 				case KeyCodes.KEY_ENTER:
 				case KeyCodes.KEY_TAB:
-					Suggestion suggestion = getCurrentSelection();
-					if (suggestion == null) {
-						/*
-						 * Allow for new items
-						 */
-						if (allowNewItem) {
-							handleNewSuggestion();
-						} 
-						hideSuggestions();
-						
-					} else {
-						setNewSelection(suggestion);
-					}
+					handleOnKeyEvent();
+//					Suggestion suggestion = getCurrentSelection();
+//					if (suggestion == null) {
+//						/*
+//						 * Allow for new items
+//						 */
+//						if (allowNewItem) {
+//							handleNewSuggestion();
+//						} 
+//						hideSuggestions();
+//						
+//					} else {
+//						setNewSelection(suggestion);
+//					}
 					break;
 				}
 			}
@@ -240,6 +252,22 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 		box.addBlurHandler(events);
 	}
 	
+	private void handleOnKeyEvent() {
+		Suggestion suggestion = getCurrentSelection();
+		if (suggestion == null) {
+			/*
+			 * Allow for new items
+			 */
+			if (allowNewItem) {
+				handleNewSuggestion();
+			} 
+			hideSuggestions();
+			
+		} else {
+			setNewSelection(suggestion);
+		}
+	}
+	
 	private void handleNewSuggestion() {
 		if (suggestionListener != null && box.getText().length() >= minimumQueryCharacters ) {
 			/*
@@ -250,6 +278,59 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 				suggestionListener.addNewSuggestion(box.getText());
 			}
 		}
+	}
+	
+	private boolean hasShortCut() {
+		return (keyCode != -1);
+	}
+	
+	private boolean isValidShortCut(KeyDownEvent event) {
+		boolean result = false;
+		if (event.getNativeEvent().getKeyCode() == keyCode) {
+			event.isAnyModifierKeyDown();
+			
+			//modifiers
+			if (modifierKeys.length > 0) {
+				/*
+				 *  public static final int SHIFT = 16;
+				 *  public static final int CTRL = 17;
+				 *  public static final int ALT = 18;
+				 *  public static final int META = 91;
+				 *  
+				 */
+				ArrayList<Integer> pressed = new ArrayList<Integer>();
+				if (event.getNativeEvent().getShiftKey()) {
+					pressed.add(16);
+				}
+				if (event.getNativeEvent().getCtrlKey()) {
+						pressed.add(17);
+				} 
+				if (event.getNativeEvent().getAltKey()) {
+					pressed.add(18);
+				} 
+				if (event.getNativeEvent().getMetaKey()) {
+					pressed.add(91);
+				}
+				
+				if (pressed.size() != modifierKeys.length) {
+					result = false;
+				} else {
+					boolean mod = true;
+					for (int i=0; i<modifierKeys.length; i++) {
+						if (!pressed.contains(modifierKeys[i])) {
+							mod = false;
+							break;
+						}
+					}
+					result = mod;
+				}
+				
+				
+			} else {
+				result = true;
+			}
+		}
+		return result;
 	}
 
 	public void resetText() {

@@ -211,6 +211,21 @@ public class SuggestField extends AbstractField<Object> implements
     public void setNewItemsAllowed(boolean allowNewItems) {
     	getState().allowNewItem = allowNewItems;
     }
+    
+    /**
+     * Set ShortCut keys combination to be handled on client side. <br></br>
+     * ShortCut has same effect as Enter of Tab key. <br></br>
+     * To disable ShorCut set values <code>-1, new int[0]<code> <br></br>
+     * Example <br></br>
+     * <code>setShortCut(ShortcutAction.KeyCode.S, new int[] { ShortcutAction.ModifierKey.CTRL })</code>
+     * 
+     * @param keyCode
+     * @param modifierKeys
+     */
+    public void setShortCut(int keyCode, int... modifierKeys) {
+    	getState().keyCode = keyCode;
+    	getState().modifierKeys = modifierKeys;
+    }
 	
 	@Override
 	public void focus() {
