@@ -56,6 +56,9 @@ Another way of debugging client-side is superdev mode. To enable it, uncomment d
 ### Version 0.0.3
 - Allow for adding new items 
 
+### Version 0.0.4
+- Added TokenMode
+
 
 ## Roadmap
 
