@@ -13,4 +13,5 @@ public class SuggestFieldState extends AbstractFieldState {
 	public boolean allowNewItem = false;
 	public int keyCode = -1;
 	public int[] modifierKeys = new int[] {};
+	public boolean tokenMode = false;
 }

@@ -1,1 +1,0 @@
-$wnd.org_vaadin_suggestfield_demo_DemoWidgetSet.runAsyncCallback2('v9(1558,1,Omd);_.vc=function V0b(){QRb((!JRb&&(JRb=new VRb),JRb),this.b.e)};nhd(Vh)(2);\n//# sourceURL=org.vaadin.suggestfield.demo.DemoWidgetSet-2.js\n')

@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.vaadin.suggestfield.client.menu.SuggestionMenuBar;
+import org.vaadin.suggestfield.client.menu.SuggestionMenuItem;
+
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.editor.client.IsEditor;
 import com.google.gwt.editor.client.LeafValueEditor;
@@ -45,12 +47,8 @@ import com.google.gwt.user.client.ui.ValueBoxBase;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Util;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.VTextField;
-
-import org.vaadin.suggestfield.client.menu.SuggestionMenuBar;
-import org.vaadin.suggestfield.client.menu.SuggestionMenuItem;
 
 public class VSuggestField extends Composite implements HasText, Focusable,
 		HasEnabled, HasAllKeyHandlers, HasValue<String>,
@@ -93,6 +91,8 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 	
 	public int keyCode = -1;
 	public int[] modifierKeys = new int[] {};
+	
+	public boolean tokenMode = false;
 	
 	/*
 	 * Callback for selecting suggestion
@@ -183,7 +183,7 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 			public void onKeyDown(KeyDownEvent event) {
 				if (hasShortCut() && isValidShortCut(event)) {
 					handleOnKeyEvent();
-					VConsole.error("Key down");
+//					VConsole.error("Key down");
 					return;
 				}
 				
@@ -241,7 +241,6 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 			@Override
 			public void onBlur(BlurEvent event) {
 				resetText();
-
 			}
 		}
 
@@ -303,7 +302,7 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 					pressed.add(16);
 				}
 				if (event.getNativeEvent().getCtrlKey()) {
-						pressed.add(17);
+					pressed.add(17);
 				} 
 				if (event.getNativeEvent().getAltKey()) {
 					pressed.add(18);
@@ -312,9 +311,8 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 					pressed.add(91);
 				}
 				
-				if (pressed.size() != modifierKeys.length) {
-					result = false;
-				} else {
+				if (pressed.size() == modifierKeys.length) {
+					
 					boolean mod = true;
 					for (int i=0; i<modifierKeys.length; i++) {
 						if (!pressed.contains(modifierKeys[i])) {
@@ -534,6 +532,9 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 	}
 
 	protected void hideSuggestions() {
+		if (suggestionTimer != null) {
+			suggestionTimer.cancel();
+		}
 		popup.hide();
 	}
 

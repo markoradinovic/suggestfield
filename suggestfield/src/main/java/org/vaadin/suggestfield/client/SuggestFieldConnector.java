@@ -76,8 +76,13 @@ public class SuggestFieldConnector extends AbstractFieldConnector implements
 				focusHandlerRegistration);
 		blurHandlerRegistration = EventHelper.updateBlurHandler(this,
 				blurHandlerRegistration);
-		getWidget().setCurrentSuggestion(getState().value);
-//		getWidget().resetText();
+		if (!getState().tokenMode) {
+			getWidget().setCurrentSuggestion(getState().value);
+		} else {
+			getWidget().setCurrentSuggestion(null);			
+		}
+		getWidget().tokenMode = getState().tokenMode;
+		
 	}
 
 	@Override
@@ -88,6 +93,9 @@ public class SuggestFieldConnector extends AbstractFieldConnector implements
 	@Override
 	public void addNewSuggestion(String suggestion) {
 		serverRpc.addNewSuggestion(suggestion);
+		if (getWidget().tokenMode) {
+			getWidget().setCurrentSuggestion(null);
+		}
 	}
 
 	@Override
@@ -95,7 +103,11 @@ public class SuggestFieldConnector extends AbstractFieldConnector implements
 		SuggestFieldSuggestion suggestion = ((OracleSuggestionImpl) event
 				.getSelectedItem()).getWrappedSuggestion();
 		serverRpc.onSuggestionSelected(suggestion);
-		getWidget().setCurrentSuggestion(suggestion);
+		if (getWidget().tokenMode) {
+			getWidget().setCurrentSuggestion(null);
+		} else {
+			getWidget().setCurrentSuggestion(suggestion);
+		}
 	}
 
 //	@Override
@@ -120,6 +132,12 @@ public class SuggestFieldConnector extends AbstractFieldConnector implements
 	public void setSuggusetion(List<SuggestFieldSuggestion> suggestions) {
 		getWidget().setSuggestions(suggestions);
 
+	}
+
+	@Override
+	public void clearValueImmediate() {
+		getWidget().setCurrentSuggestion(null);
+		
 	}
 
 	

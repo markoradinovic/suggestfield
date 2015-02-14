@@ -9,4 +9,7 @@ public interface SuggestFieldClientRpc extends ClientRpc {
 //	public void setCurrentSuggusetion(SuggestFieldSuggestion suggestion);
 
 	public void setSuggusetion(List<SuggestFieldSuggestion> suggestions);
+	
+	
+	public void clearValueImmediate();
 }

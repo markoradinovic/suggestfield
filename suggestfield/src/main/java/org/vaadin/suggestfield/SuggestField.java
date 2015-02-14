@@ -56,6 +56,10 @@ public class SuggestField extends AbstractField<Object> implements
 		
 	}
 	
+	public interface TokenHandler extends Serializable {
+		public void handleToken(Object token);
+	}
+	
 	FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(this) {
 
 		private static final long serialVersionUID = -780524775769549747L;
@@ -69,6 +73,7 @@ public class SuggestField extends AbstractField<Object> implements
 	private SuggestionConverter suggestionConverter = new StringSuggestionConverter();
 	private SuggestionHandler suggestionHandler;
 	private NewItemsHandler newItemsHandler;
+	private TokenHandler tokenHandler;
 
 	public SuggestField() {
 		registerRpc(this, SuggestFieldServerRpc.class);
@@ -105,15 +110,22 @@ public class SuggestField extends AbstractField<Object> implements
 	@Override
 	public void onSuggestionSelected(SuggestFieldSuggestion suggestion) {
 		if (suggestionConverter != null) {
-			setValue(suggestionConverter.toItem(suggestion), false);
+			if (getTokenMode() && tokenHandler != null) {
+				tokenHandler.handleToken(suggestionConverter.toItem(suggestion));
+			} else {
+				setValue(suggestionConverter.toItem(suggestion), false);
+			}
 		}
-		
 	}
 	
 	@Override
 	public void addNewSuggestion(String suggestion) {
 		if (getNewItemsHandler() != null) {
-			setValue(newItemsHandler.addNewItem(suggestion));
+			if (getTokenMode() && tokenHandler != null) {
+				tokenHandler.handleToken(newItemsHandler.addNewItem(suggestion));
+			} else {
+				setValue(newItemsHandler.addNewItem(suggestion));
+			}
 		}
 	}
 	
@@ -136,11 +148,26 @@ public class SuggestField extends AbstractField<Object> implements
 		if (suggestionConverter != null) {
 			//getRpcProxy(SuggestFieldClientRpc.class).setCurrentSuggusetion(suggestionConverter.toSuggestion(newValue));
 			getState().value = suggestionConverter.toSuggestion(newValue);
+			/*
+			 * Immediate clear if value is null
+			 */
+			if (newValue == null) {
+				getRpcProxy(SuggestFieldClientRpc.class).clearValueImmediate();
+			}
 		}
 	}
+	
 
 	public void setDelay(int delayMillis) {
 		getState().delayMillis = delayMillis;
+	}
+	
+	public void setTokenMode(boolean tokenMode) {
+		getState().tokenMode = tokenMode;
+	}
+	
+	public boolean getTokenMode() {
+		return getState().tokenMode;
 	}
 
 	/**
@@ -175,7 +202,7 @@ public class SuggestField extends AbstractField<Object> implements
 	
 	/**
 	 * Set width of popup. Width must be in <code>px</code>. For auto-width set <code>0</code> value.
-	 * @param width
+	 * @param width Popup Width in px
 	 */
 	public void setPopupWidth(int width) {
 		if (width == 0) {
@@ -205,7 +232,7 @@ public class SuggestField extends AbstractField<Object> implements
     /**
      * Enables or disables possibility to add new items by the user.
      * 
-     * @param allowNewItems
+     * @param allowNewItems <code>true</code> or <code>false</code>
      * 
      */
     public void setNewItemsAllowed(boolean allowNewItems) {
@@ -213,10 +240,10 @@ public class SuggestField extends AbstractField<Object> implements
     }
     
     /**
-     * Set ShortCut keys combination to be handled on client side. <br></br>
-     * ShortCut has same effect as Enter of Tab key. <br></br>
-     * To disable ShorCut set values <code>-1, new int[0]<code> <br></br>
-     * Example <br></br>
+     * Set ShortCut keys combination to be handled on client side. <br>
+     * ShortCut has same effect as Enter of Tab key. <br>
+     * To disable ShorCut set values <code>-1, new int[0]</code> <br>
+     * Example <br>
      * <code>setShortCut(ShortcutAction.KeyCode.S, new int[] { ShortcutAction.ModifierKey.CTRL })</code>
      * 
      * @param keyCode
@@ -302,6 +329,14 @@ public class SuggestField extends AbstractField<Object> implements
 
 	public void setNewItemsHandler(NewItemsHandler newItemsHandler) {
 		this.newItemsHandler = newItemsHandler;
+	}
+
+	public TokenHandler getTokenHandler() {
+		return tokenHandler;
+	}
+
+	public void setTokenHandler(TokenHandler tokenHandler) {
+		this.tokenHandler = tokenHandler;
 	}
 
 	
