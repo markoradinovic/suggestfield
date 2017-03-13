@@ -50,12 +50,12 @@
 	<distributionManagement>
 	    <repository>
 		<id>suggestfield-release</id>
-		<name>Default Deploy Repository</name>
+		<name>Foconis Release Repository</name>
 		<url>sftp://bamboo@repo.foconis.de/var/www/html/repo/maven-release/</url>
 	    </repository>
 	    <snapshotRepository>
 		<id>suggestfield-snapshot</id>
-		<name>Default Deploy Repository</name>
+		<name>Foconis Snapshot Repository</name>
 		<url>sftp://bamboo@repo.foconis.de/var/www/html/repo/maven-snapshot/</url>
 	    </snapshotRepository>
 	</distributionManagement>
