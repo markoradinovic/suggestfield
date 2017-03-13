@@ -28,7 +28,7 @@
 	</properties>
 
 	<scm>
-		<developerConnection>scm:git:ssh://git@github.com:FOCONIS/suggestfield.git</developerConnection>
+		<developerConnection>scm:git:git@github.com:FOCONIS/suggestfield.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 
