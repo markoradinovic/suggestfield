@@ -23,14 +23,6 @@
 		<url>https://github.com/markoradinovic/suggestfield/issues</url>
 	</issueManagement>
 
-	<licenses>
-		<license>
-			<name>Apache 2</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
-
 	<repositories>
 		<repository>
 			<id>vaadin-addons</id>
