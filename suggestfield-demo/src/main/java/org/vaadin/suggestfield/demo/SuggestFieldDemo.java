@@ -12,10 +12,10 @@ import org.vaadin.suggestfield.SuggestField.NewItemsHandler;
 import org.vaadin.suggestfield.SuggestField.SuggestionHandler;
 import org.vaadin.suggestfield.client.SuggestFieldSuggestion;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
+import com.vaadin.data.HasValue.ValueChangeEvent;
+import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
@@ -84,7 +84,7 @@ public class SuggestFieldDemo extends VerticalLayout {
 			}
 		});
 
-		search1.setInputPrompt("Type country name");
+		search1.setPlaceholder("Type country name");
 		search1.setEnabled(true);
 		search1.setWidth("600px");
 		search1.setPopupWidth(600);
@@ -105,7 +105,7 @@ public class SuggestFieldDemo extends VerticalLayout {
 		/*
 		 * Testing in Tab
 		 */
-		search2.setInputPrompt("Type something");
+		search2.setPlaceholder("Type something");
 		search2.setWidth("400px");
 		setUpAutocomplete(search2);
 
@@ -120,25 +120,16 @@ public class SuggestFieldDemo extends VerticalLayout {
 
 	private void setUpAutocomplete(final SuggestField search) {
 
-		search.setSuggestionHandler(new SuggestionHandler() {
-
-			@Override
-			public List<Object> searchItems(String query) {
+		search.setSuggestionHandler(query-> {
 				System.out.println("Query: " + query);
 				return handleSearchQuery(query);
-			}
 		});
 
 		search.setSuggestionConverter(new CountrySuggestionConverter());
 
-		search.addValueChangeListener(new ValueChangeListener() {
-
-			@Override
-			public void valueChange(ValueChangeEvent event) {
-				System.out.println("SuugestField value changed");
-				Notification.show("Selected " + search.getValue());
-
-			}
+		search.addValueChangeListener( event-> {
+			System.out.println("SuugestField value changed");
+			Notification.show("Selected " + search.getValue());
 		});
 
 		/*
@@ -190,7 +181,7 @@ public class SuggestFieldDemo extends VerticalLayout {
 		}
 		System.out.println("Total: " + result.size());
 
-		return new ArrayList<Object>(result);
+		return new ArrayList<>(result);
 	}
 
 	private List<CountryBean> items = new ArrayList<CountryBean>();
@@ -213,7 +204,6 @@ public class SuggestFieldDemo extends VerticalLayout {
 			assert result != null : "This should not be happening";
 			return result;
 		}
-
 	}
 
 	public static class CountryBean implements Serializable {

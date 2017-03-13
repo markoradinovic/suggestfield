@@ -5,12 +5,12 @@
 	<groupId>org.vaadin</groupId>
 	<artifactId>suggestfield</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.4</version>
+	<version>0.0.5-SNAPSHOT</version>
 	<name>SuggestField Add-on</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<vaadin.version>7.3.10</vaadin.version>
+		<vaadin.version>8.0.0.beta1</vaadin.version>
 		<vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
 
 		<!-- ZIP Manifest fields -->
@@ -29,10 +29,8 @@
 	</organization>
     
 	<scm>
-		<url>git://github.com/markoradinovic/suggestfield.git</url>
-		<connection>scm:git:git://github.com/markoradinovic/suggestfield.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com:/markoradinovic/suggestfield.git</developerConnection>
-		<tag>SuggestField add-on for Vaadin</tag>
+		<developerConnection>scm:git:ssh://git@github.com:FOCONIS/suggestfield.git</developerConnection>
+		<tag>HEAD</tag>
 	</scm>
 
 	<issueManagement>
@@ -49,6 +47,19 @@
 		</license>
 	</licenses>
 
+	<distributionManagement>
+	    <repository>
+		<id>suggestfield-release</id>
+		<name>Default Deploy Repository</name>
+		<url>sftp://bamboo@repo.foconis.de/var/www/html/repo/maven-release/</url>
+	    </repository>
+	    <snapshotRepository>
+		<id>suggestfield-snapshot</id>
+		<name>Default Deploy Repository</name>
+		<url>sftp://bamboo@repo.foconis.de/var/www/html/repo/maven-snapshot/</url>
+	    </snapshotRepository>
+	</distributionManagement>
+
 	<repositories>
 		<repository>
 			<id>vaadin-addons</id>
@@ -64,6 +75,11 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
+		 <repository>
+    		<id>vaadin-prereleases</id>
+    		<name>Vaadin Pre-releases</name>
+   			 <url>https://maven.vaadin.com/vaadin-prereleases</url>
+  		</repository>
 	</repositories>
 
 	<pluginRepositories>
@@ -76,6 +92,11 @@
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
+		</pluginRepository>
+		<pluginRepository>
+		    <id>vaadin-prereleases</id>
+		    <name>Vaadin Pre-releases</name>
+		    <url>https://maven.vaadin.com/vaadin-prereleases</url>
 		</pluginRepository>
 	</pluginRepositories>
 
@@ -90,6 +111,23 @@
 			<artifactId>vaadin-client</artifactId>
 			<version>${vaadin.version}</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-compatibility-client</artifactId>
+			<version>${vaadin.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-compatibility-server</artifactId>
+			<version>${vaadin.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-compatibility-client-compiled</artifactId>
+			<version>${vaadin.version}</version>
 		</dependency>
 		
 		<!-- This can be replaced with TestNG or some other test framework supported by the surefire plugin -->
@@ -109,8 +147,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.0</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 
@@ -204,7 +242,14 @@
 				<directory>src/main/resources</directory>
 			</resource>
 		</resources>
-		
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh</artifactId>
+				<version>2.10</version>
+			</extension>
+		</extensions>
+
 	</build>
 
 </project>

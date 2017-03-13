@@ -5,12 +5,12 @@
 	<groupId>org.vaadin</groupId>
 	<artifactId>suggestfield-demo</artifactId>
 	<packaging>war</packaging>
-	<version>0.0.4</version>
+	<version>0.0.5-SNAPSHOT</version>
 	<name>SuggestField Add-on Demo</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<vaadin.version>7.3.10</vaadin.version>
+		<vaadin.version>8.0.0.beta1</vaadin.version>
 		<vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
 	</properties>
 
@@ -56,6 +56,11 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
+		<repository>
+    		<id>vaadin-prereleases</id>
+    		<name>Vaadin Pre-releases</name>
+   			 <url>https://maven.vaadin.com/vaadin-prereleases</url>
+  		</repository>
 	</repositories>
 
 	<pluginRepositories>
@@ -68,6 +73,11 @@
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
+		</pluginRepository>
+		<pluginRepository>
+		    <id>vaadin-prereleases</id>
+		    <name>Vaadin Pre-releases</name>
+		    <url>https://maven.vaadin.com/vaadin-prereleases</url>
 		</pluginRepository>
 	</pluginRepositories>
 
@@ -87,14 +97,25 @@
 			<artifactId>vaadin-server</artifactId>
 			<version>${vaadin.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-client-compiler</artifactId>
+			<artifactId>vaadin-themes</artifactId>
 			<version>${vaadin.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-themes</artifactId>
+			<artifactId>vaadin-compatibility-server</artifactId>
+			<version>${vaadin.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-compatibility-client</artifactId>
+			<version>${vaadin.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-compatibility-client-compiled</artifactId>
 			<version>${vaadin.version}</version>
 		</dependency>
 		<dependency>
@@ -113,8 +134,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.0</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 

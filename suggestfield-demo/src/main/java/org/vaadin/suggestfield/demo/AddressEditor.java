@@ -11,13 +11,13 @@ import org.vaadin.suggestfield.SuggestField.NewItemsHandler;
 import org.vaadin.suggestfield.SuggestField.SuggestionHandler;
 import org.vaadin.suggestfield.SuggestField.TokenHandler;
 
+import com.vaadin.data.ValidationResult;
 import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.shared.Registration;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -31,6 +31,8 @@ public class AddressEditor extends CssLayout implements NewItemsHandler,
 
 	private EmailValidator validator;
 
+	private Registration addressRemoveRegistration;
+	
 	public AddressEditor() {
 		super();
 		setWidth("100%");
@@ -40,7 +42,6 @@ public class AddressEditor extends CssLayout implements NewItemsHandler,
 		suggestField = new SuggestField();
 		suggestField.setNewItemsAllowed(true);
 		suggestField.setNewItemsHandler(this);
-		suggestField.setImmediate(true);
 		suggestField.setTokenMode(true);
 		suggestField.setSuggestionHandler(this);
 		suggestField.setSuggestionConverter(new StringSuggestionConverter());
@@ -64,10 +65,9 @@ public class AddressEditor extends CssLayout implements NewItemsHandler,
 	}
 
 	@Override
-	public Object addNewItem(String newItemText) {
-		if (validator.isValid(newItemText)) {
+	public String addNewItem(String newItemText) {
+		if (!validator.apply(newItemText, null).isError()) {
 			addresses.add(newItemText);
-
 		}
 		return newItemText;
 	}
@@ -89,18 +89,8 @@ public class AddressEditor extends CssLayout implements NewItemsHandler,
 		}
 		System.out.println("Total: " + result.size());
 
-		return new ArrayList<Object>(result);
+		return new ArrayList<>(result);
 	}
-
-
-	private ClickListener addressRemoveClick = new ClickListener() {
-
-		@Override
-		public void buttonClick(ClickEvent event) {
-			AddressEditor.this.removeComponent(event.getButton());
-			event.getButton().removeClickListener(addressRemoveClick);
-		}
-	};
 
 	@Override
 	public void handleToken(Object token) {
@@ -117,7 +107,7 @@ public class AddressEditor extends CssLayout implements NewItemsHandler,
 		while (getComponentCount() > 1) {
 			if (getComponent(0) instanceof Button) {
 				final Button btn = (Button) getComponent(0);
-				btn.removeClickListener(addressRemoveClick);
+				addressRemoveRegistration.remove();
 				removeComponent(btn);
 			}
 		}
@@ -131,7 +121,7 @@ public class AddressEditor extends CssLayout implements NewItemsHandler,
 				count++;
 				final Button btn = (Button) getComponent(i);
 				final String address = (String) btn.getData();
-				if (!validator.isValid(address)) {
+				if (validator.apply(address, null).isError()) {
 					valid = false;
 					break;
 				}
@@ -173,13 +163,18 @@ public class AddressEditor extends CssLayout implements NewItemsHandler,
 		btn.setData(address);
 		btn.addStyleName(ValoTheme.BUTTON_SMALL);
 		btn.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_RIGHT);
-		btn.addClickListener(addressRemoveClick);
+		addressRemoveRegistration = btn.addClickListener(event -> {
+			AddressEditor.this.removeComponent(event.getButton());
+			
+		});
 
-		if (validator.isValid(address)) {
+		ValidationResult validationResult = validator.apply(address, null);
+		
+		if (!validationResult.isError()) {
 			btn.setDescription("Click to remove");
 		} else {
 			btn.addStyleName(ValoTheme.BUTTON_DANGER);
-			btn.setDescription(validator.getErrorMessage());
+			btn.setDescription(validationResult.getErrorMessage());
 		}
 		return btn;
 	}

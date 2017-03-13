@@ -57,7 +57,7 @@ public class SuggestFieldConnector extends AbstractFieldConnector implements
 	public void onStateChanged(StateChangeEvent stateChangeEvent) {
 		super.onStateChanged(stateChangeEvent);
 		getWidget().client = getConnection();
-		getWidget().setInputPrompt(getState().inputPrompt);
+		getWidget().setPlaceholder(getState().placeHolder);
 		getWidget().trimQuery = getState().trimQuery;
 		getWidget().minimumQueryCharacters = getState().minimumQueryCharacters;
 		getWidget().popupWidth = getState().popupWidth;
@@ -77,7 +77,7 @@ public class SuggestFieldConnector extends AbstractFieldConnector implements
 		blurHandlerRegistration = EventHelper.updateBlurHandler(this,
 				blurHandlerRegistration);
 		if (!getState().tokenMode) {
-			getWidget().setCurrentSuggestion(getState().value);
+			getWidget().setCurrentSuggestion(getState().fieldSuggestion);
 		} else {
 			getWidget().setCurrentSuggestion(null);			
 		}
