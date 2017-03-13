@@ -5,12 +5,54 @@
 	<groupId>org.vaadin</groupId>
 	<artifactId>suggestfield-root</artifactId>
 	<packaging>pom</packaging>
-	<version>0.0.4</version>
+	<version>0.0.5-FOC1-SNAPSHOT</version>
 	<name>SuggestField Add-on Root Project</name>
 
 	<modules>
 		<module>suggestfield</module>
 		<module>suggestfield-demo</module>
 	</modules>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<vaadin.version>8.0.2</vaadin.version>
+		<vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
+
+		<!-- ZIP Manifest fields -->
+		<Implementation-Version>${project.version}</Implementation-Version>
+		<!-- Must not change this because of the Directory -->
+		<Implementation-Title>${project.name}</Implementation-Title>
+		<Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
+		<Vaadin-License-Title>Apache License 2.0</Vaadin-License-Title>
+		<Vaadin-Addon>${artifactId}-${project.version}.jar</Vaadin-Addon>
+	</properties>
+
+	<scm>
+		<developerConnection>scm:git:ssh://git@github.com:FOCONIS/suggestfield.git</developerConnection>
+		<tag>HEAD</tag>
+	</scm>
+
+	<distributionManagement>
+	    <repository>
+		<id>suggestfield-release</id>
+		<name>Foconis Release Repository</name>
+		<url>sftp://bamboo@repo.foconis.de/var/www/html/repo/maven-release/</url>
+	    </repository>
+	    <snapshotRepository>
+		<id>suggestfield-snapshot</id>
+		<name>Foconis Snapshot Repository</name>
+		<url>sftp://bamboo@repo.foconis.de/var/www/html/repo/maven-snapshot/</url>
+	    </snapshotRepository>
+	</distributionManagement>
+
+	<build>
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh</artifactId>
+				<version>2.10</version>
+			</extension>
+		</extensions>
+	</build>
 
 </project>

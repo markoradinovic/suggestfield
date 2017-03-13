@@ -2,17 +2,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.vaadin</groupId>
+	
+	<parent>
+		<groupId>org.vaadin</groupId>
+		<artifactId>suggestfield-root</artifactId>
+		<version>0.0.5-FOC1-SNAPSHOT</version>
+	</parent>
+
 	<artifactId>suggestfield-demo</artifactId>
 	<packaging>war</packaging>
-	<version>0.0.5-SNAPSHOT</version>
 	<name>SuggestField Add-on Demo</name>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<vaadin.version>8.0.0.beta1</vaadin.version>
-		<vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
-	</properties>
 
     <!--     
 	<organization>
