@@ -25,6 +25,7 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -109,7 +110,6 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 	 */
 	public VSuggestField() {
 		box = GWT.create(VTextField.class);
-		box.setImmediate(true);
 		popup = new SuggestionPopup();
 		menu = new SuggestionMenuBar();
 		popup.setWidget(menu);
@@ -332,7 +332,7 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 	}
 
 	public void resetText() {
-		box.updateFieldContent((currentSuggestion != null) ? currentSuggestion
+		box.setText((currentSuggestion != null) ? currentSuggestion
 				.getReplacementString() : "");
 	}
 
@@ -436,8 +436,14 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 		this.suggestionListener = listener;
 	}
 	
+	@Deprecated
 	public void setInputPrompt(String inputPrompt) {
-		box.setInputPrompt(inputPrompt);
+		setPlaceholder(inputPrompt);
+	}
+	
+	public void setPlaceholder( String value )
+	{
+		box.setPlaceholder(value);
 	}
 	
 	public HandlerRegistration addKeyDownHandler(KeyDownHandler handler) {
@@ -506,7 +512,7 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 	}
 
 	public void setText(String text) {
-		box.updateFieldContent(text);
+		box.setText(text);
 	}
 
 	public void setValue(String newValue) {
@@ -578,7 +584,7 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 
 		@SuppressWarnings("deprecation")
 		public SuggestionPopup() {
-			super(true, true, true);
+			super(true, true);
 			getElement().getStyle().setZIndex(Z_INDEX);
 			setStylePrimaryName("v-filterselect-suggestpopup");
 			Roles.getListRole().set(getElement());
@@ -677,6 +683,13 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 			}
 			setPopupPosition(left, top);
 
+		}
+
+		@Override
+		public void onClose(CloseEvent<PopupPanel> event)
+		{
+			// TODO Auto-generated method stub
+			
 		}
 	}
 

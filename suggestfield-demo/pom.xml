@@ -5,12 +5,12 @@
 	<groupId>org.vaadin</groupId>
 	<artifactId>suggestfield-demo</artifactId>
 	<packaging>war</packaging>
-	<version>0.0.4</version>
+	<version>0.0.5</version>
 	<name>SuggestField Add-on Demo</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<vaadin.version>7.3.10</vaadin.version>
+		<vaadin.version>8.0.2</vaadin.version>
 		<vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
 	</properties>
 
@@ -113,8 +113,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.0</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 

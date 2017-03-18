@@ -11,6 +11,7 @@ import org.vaadin.suggestfield.SuggestField.NewItemsHandler;
 import org.vaadin.suggestfield.SuggestField.SuggestionHandler;
 import org.vaadin.suggestfield.SuggestField.TokenHandler;
 
+import com.vaadin.data.Binder;
 import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
@@ -25,7 +26,9 @@ import com.vaadin.ui.themes.ValoTheme;
 public class AddressEditor extends CssLayout implements NewItemsHandler,
 		SuggestionHandler, LayoutClickListener, TokenHandler {
 
-	private SuggestField suggestField;
+	private SuggestField<String> suggestField;
+	
+	private Binder<Adress> binder;
 
 	private List<String> addresses = new LinkedList<String>();
 
@@ -37,10 +40,9 @@ public class AddressEditor extends CssLayout implements NewItemsHandler,
 		addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
 		addStyleName("address-editor");
 
-		suggestField = new SuggestField();
+		suggestField = new SuggestField<>();
 		suggestField.setNewItemsAllowed(true);
 		suggestField.setNewItemsHandler(this);
-		suggestField.setImmediate(true);
 		suggestField.setTokenMode(true);
 		suggestField.setSuggestionHandler(this);
 		suggestField.setSuggestionConverter(new StringSuggestionConverter());
@@ -51,6 +53,12 @@ public class AddressEditor extends CssLayout implements NewItemsHandler,
 
 		addLayoutClickListener(this);
 
+		binder = new Binder<>(Adress.class);
+		
+		binder.forField(suggestField)
+			.withValidator(new EmailValidator("Invalid email address"))
+			.bind(Adress::getMail, Adress::setMail);
+		
 		validator = new EmailValidator("Invalid email address");
 	}
 	
@@ -65,7 +73,7 @@ public class AddressEditor extends CssLayout implements NewItemsHandler,
 
 	@Override
 	public Object addNewItem(String newItemText) {
-		if (validator.isValid(newItemText)) {
+		if (!validator.apply(newItemText, null).isError()) {
 			addresses.add(newItemText);
 
 		}
@@ -131,10 +139,10 @@ public class AddressEditor extends CssLayout implements NewItemsHandler,
 				count++;
 				final Button btn = (Button) getComponent(i);
 				final String address = (String) btn.getData();
-				if (!validator.isValid(address)) {
-					valid = false;
-					break;
-				}
+//				if (!validator.isValid(address)) {
+//					valid = false;
+//					break;
+//				}
 			}
 		}
 		if (required && count == 0) {
@@ -175,12 +183,12 @@ public class AddressEditor extends CssLayout implements NewItemsHandler,
 		btn.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_RIGHT);
 		btn.addClickListener(addressRemoveClick);
 
-		if (validator.isValid(address)) {
-			btn.setDescription("Click to remove");
-		} else {
-			btn.addStyleName(ValoTheme.BUTTON_DANGER);
-			btn.setDescription(validator.getErrorMessage());
-		}
+//		if (validator.isValid(address)) {
+//			btn.setDescription("Click to remove");
+//		} else {
+//			btn.addStyleName(ValoTheme.BUTTON_DANGER);
+//			btn.setDescription(validator.getErrorMessage());
+//		}
 		return btn;
 	}
 

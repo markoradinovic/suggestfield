@@ -12,8 +12,8 @@ import org.vaadin.suggestfield.SuggestField.NewItemsHandler;
 import org.vaadin.suggestfield.SuggestField.SuggestionHandler;
 import org.vaadin.suggestfield.client.SuggestFieldSuggestion;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.data.HasValue;
+import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.event.FieldEvents.BlurEvent;
@@ -118,7 +118,7 @@ public class SuggestFieldDemo extends VerticalLayout {
 		tab.addTab(new Label("Suggest field demo"), "Demo");
 	}
 
-	private void setUpAutocomplete(final SuggestField search) {
+	private void setUpAutocomplete(final SuggestField<String> search) {
 
 		search.setSuggestionHandler(new SuggestionHandler() {
 
@@ -131,13 +131,14 @@ public class SuggestFieldDemo extends VerticalLayout {
 
 		search.setSuggestionConverter(new CountrySuggestionConverter());
 
-		search.addValueChangeListener(new ValueChangeListener() {
+		search.addValueChangeListener(new HasValue.ValueChangeListener<String>()
+		{
 
 			@Override
-			public void valueChange(ValueChangeEvent event) {
+			public void valueChange(ValueChangeEvent<String> event)
+			{
 				System.out.println("SuugestField value changed");
 				Notification.show("Selected " + search.getValue());
-
 			}
 		});
 

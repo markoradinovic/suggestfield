@@ -9,8 +9,6 @@ import org.vaadin.suggestfield.client.SuggestFieldServerRpc;
 import org.vaadin.suggestfield.client.SuggestFieldState;
 import org.vaadin.suggestfield.client.SuggestFieldSuggestion;
 
-import com.vaadin.data.Validator.InvalidValueException;
-import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.BlurNotifier;
@@ -18,11 +16,12 @@ import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcImpl;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.FocusNotifier;
+import com.vaadin.shared.Registration;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component.Focusable;
 
 @SuppressWarnings("serial")
-public class SuggestField extends AbstractField<Object> implements
+public class SuggestField<T> extends AbstractField<T> implements
 		SuggestFieldServerRpc, Focusable, BlurNotifier, FocusNotifier {
 	
 	/**
@@ -81,11 +80,6 @@ public class SuggestField extends AbstractField<Object> implements
 	}
 
 	@Override
-	public Class<Object> getType() {
-		return Object.class;
-	}
-
-	@Override
 	public SuggestFieldState getState() {
 		return (SuggestFieldState) super.getState();
 	}
@@ -113,7 +107,7 @@ public class SuggestField extends AbstractField<Object> implements
 			if (getTokenMode() && tokenHandler != null) {
 				tokenHandler.handleToken(suggestionConverter.toItem(suggestion));
 			} else {
-				setValue(suggestionConverter.toItem(suggestion), false);
+				setValue((T) suggestionConverter.toItem(suggestion), true);
 			}
 		}
 	}
@@ -124,23 +118,13 @@ public class SuggestField extends AbstractField<Object> implements
 			if (getTokenMode() && tokenHandler != null) {
 				tokenHandler.handleToken(newItemsHandler.addNewItem(suggestion));
 			} else {
-				setValue(newItemsHandler.addNewItem(suggestion));
+				setValue((T) newItemsHandler.addNewItem(suggestion));
 			}
 		}
 	}
 	
-	
 	@Override
-	protected void setValue(Object newFieldValue, boolean repaintIsNotNeeded)
-			throws com.vaadin.data.Property.ReadOnlyException,
-			ConversionException, InvalidValueException {
-		
-		super.setValue(newFieldValue, repaintIsNotNeeded);
-	}
-	
-	@Override
-	protected void setInternalValue(Object newValue) {
-		super.setInternalValue(newValue);
+	protected void doSetValue(Object newValue) {
 		/*
 		 * This allows for a new value to be sent to client if setValue was called before selecting suggestion
 		 * This must be here for BeanFieldGroup to work.
@@ -264,55 +248,16 @@ public class SuggestField extends AbstractField<Object> implements
     }
 
 	@Override
-	public void addFocusListener(FocusListener listener) {
-		addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
+	public Registration addFocusListener(FocusListener listener) {
+		return addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
 				FocusListener.focusMethod);
 	}
 
-	@Deprecated
 	@Override
-	public void addListener(FocusListener listener) {
-		addFocusListener(listener);
-		
-	}
-
-	@Override
-	public void removeFocusListener(FocusListener listener) {
-		removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
-		
-	}
-
-	@Deprecated
-	@Override
-	public void removeListener(FocusListener listener) {
-		removeFocusListener(listener);
-		
-	}
-
-	@Override
-	public void addBlurListener(BlurListener listener) {
-		addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
+	public Registration addBlurListener(BlurListener listener) {
+		return addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
 				BlurListener.blurMethod);
 		
-	}
-
-	@Deprecated
-	@Override
-	public void addListener(BlurListener listener) {
-		addBlurListener(listener);
-		
-	}
-
-	@Override
-	public void removeBlurListener(BlurListener listener) {
-		removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
-		
-	}
-
-	@Deprecated
-	@Override
-	public void removeListener(BlurListener listener) {
-		removeBlurListener(listener);	
 	}
 	
 	public SuggestionConverter getSuggestionConverter() {
@@ -337,6 +282,12 @@ public class SuggestField extends AbstractField<Object> implements
 
 	public void setTokenHandler(TokenHandler tokenHandler) {
 		this.tokenHandler = tokenHandler;
+	}
+
+	@Override
+	public T getValue()
+	{
+		return (T) suggestionConverter.toItem(getState().value);
 	}
 
 	
