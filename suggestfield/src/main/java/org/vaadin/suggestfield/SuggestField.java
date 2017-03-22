@@ -138,13 +138,13 @@ public class SuggestField extends AbstractField<Object> implements
 		if (suggestionConverter != null) {
 			//getRpcProxy(SuggestFieldClientRpc.class).setCurrentSuggusetion(suggestionConverter.toSuggestion(newValue));
 			getState().fieldSuggestion = suggestionConverter.toSuggestion(newValue);
+			getState().value = newValue;
+			
 			/*
 			 * Immediate clear if value is null
 			 */
 			if (newValue == null) {
 				getRpcProxy(SuggestFieldClientRpc.class).clearValueImmediate();
-			} else {
-				getState().value = newValue;
 			}
 		}
 	}
