@@ -6,15 +6,22 @@ import java.lang.reflect.Method;
 import org.vaadin.suggestfield.SuggestField.SuggestionConverter;
 import org.vaadin.suggestfield.client.SuggestFieldSuggestion;
 
+/** Abstract base converter for beans
+ * 
+ * @author markoradinovic
+ * @author pesse
+ *
+ * @param <T>
+ */
 @SuppressWarnings("serial")
-public abstract class BeanSuggestionConverter implements SuggestionConverter {
+public abstract class BeanSuggestionConverter<T> implements SuggestionConverter<T> {
 
 	private final Class<? extends Object> itemClass;
 	private final String idPropertyName;
 	private final String displayPropertyName;
 	private final String replacementPropertyName;
 
-	public BeanSuggestionConverter(Class<? extends Object> itemClass,
+	public BeanSuggestionConverter(Class<? extends T> itemClass,
 			String idPropertyName, String displayPropertyName,
 			String replacementPropertyName) {
 		assert itemClass != null : "Item Class cannot be null";
@@ -28,7 +35,7 @@ public abstract class BeanSuggestionConverter implements SuggestionConverter {
 	}
 
 	@Override
-	public SuggestFieldSuggestion toSuggestion(Object item) {
+	public SuggestFieldSuggestion toSuggestion(T item) {
 		if (item == null) {
 			return new SuggestFieldSuggestion("-1", "", "");
 		} else {
@@ -38,10 +45,10 @@ public abstract class BeanSuggestionConverter implements SuggestionConverter {
 					replacementPropertyName, item));
 		}
 	}
-
+	
 	@Override
-	public abstract Object toItem(SuggestFieldSuggestion suggestion);
-
+	public abstract T toItem(SuggestFieldSuggestion suggestion);
+	
 	private String getItemPropertyValue(String property, Object item) {
 		try {
 			Method getter = initGetterMethod(property, itemClass);

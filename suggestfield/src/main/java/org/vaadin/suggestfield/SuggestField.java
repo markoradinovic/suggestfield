@@ -20,6 +20,13 @@ import com.vaadin.shared.Registration;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component.Focusable;
 
+/** SuggestField server component
+ * 
+ * @author markoradinovic
+ * @author pesse
+ *
+ * @param <T>
+ */
 @SuppressWarnings("serial")
 public class SuggestField<T> extends AbstractField<T> implements
 		SuggestFieldServerRpc, Focusable, BlurNotifier, FocusNotifier {
@@ -28,35 +35,35 @@ public class SuggestField<T> extends AbstractField<T> implements
 	 * This handler must be implemented 
 	 *
 	 */
-	public interface SuggestionHandler extends Serializable {
+	public interface SuggestionHandler<T> extends Serializable {
 		
 		/**
 		 * Provide suggestions based on query string
 		 * @param query Search string
 		 * @return list of Items
 		 */
-		public List<Object> searchItems(String query);
+		public List<T> searchItems(String query);
 	}
 	
-	public interface NewItemsHandler extends Serializable {
+	public interface NewItemsHandler<T> extends Serializable {
 		/**
 		 * Provide new suggestion based on newItemText
 		 * @param newItemText typed by user
 		 * @return new Item
 		 */
-		public Object addNewItem(String newItemText);
+		public T addNewItem(String newItemText);
 	}
 	
-	public interface SuggestionConverter extends Serializable {
+	public interface SuggestionConverter<T> extends Serializable {
 		
-		public SuggestFieldSuggestion toSuggestion(Object item);
+		public SuggestFieldSuggestion toSuggestion(T item);
 		
-		public Object toItem(SuggestFieldSuggestion suggestion);
+		public T toItem(SuggestFieldSuggestion suggestion);
 		
 	}
 	
-	public interface TokenHandler extends Serializable {
-		public void handleToken(Object token);
+	public interface TokenHandler<T> extends Serializable {
+		public void handleToken(T token);
 	}
 	
 	FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(this) {
@@ -69,16 +76,25 @@ public class SuggestField<T> extends AbstractField<T> implements
 		}
 	};
 	
-	private SuggestionConverter suggestionConverter = new StringSuggestionConverter();
-	private SuggestionHandler suggestionHandler;
-	private NewItemsHandler newItemsHandler;
-	private TokenHandler tokenHandler;
+	//private SuggestionConverter<String> suggestionConverter = new StringSuggestionConverter();
+	// TODO: Add default Converter
+	private SuggestionConverter<T> suggestionConverter;
+	private SuggestionHandler<T> suggestionHandler;
+	private NewItemsHandler<T> newItemsHandler;
+	private TokenHandler<T> tokenHandler;
 
 	public SuggestField() {
 		registerRpc(this, SuggestFieldServerRpc.class);
 		registerRpc(focusBlurRpc);
 	}
 
+	public SuggestField( SuggestionConverter<T> suggestionConverter )
+	{
+		super();
+		
+		this.suggestionConverter = suggestionConverter;
+	}
+	
 	@Override
 	public SuggestFieldState getState() {
 		return (SuggestFieldState) super.getState();
@@ -90,11 +106,11 @@ public class SuggestField<T> extends AbstractField<T> implements
 	public void searchSuggestions(String query) {
 		List<SuggestFieldSuggestion> suggestions = new ArrayList<SuggestFieldSuggestion>();
 		if (suggestionHandler != null && suggestionConverter != null) {
-			List<Object> searchResult = suggestionHandler.searchItems(query);
+			List<T> searchResult = suggestionHandler.searchItems(query);
 			if (searchResult == null) {
-				searchResult = new ArrayList<Object>();
+				searchResult = new ArrayList<T>();
 			}
-			for (Object result : searchResult) {
+			for (T result : searchResult) {
 				suggestions.add(suggestionConverter.toSuggestion(result));
 			}
 		}
@@ -107,7 +123,7 @@ public class SuggestField<T> extends AbstractField<T> implements
 			if (getTokenMode() && tokenHandler != null) {
 				tokenHandler.handleToken(suggestionConverter.toItem(suggestion));
 			} else {
-				setValue((T) suggestionConverter.toItem(suggestion), true);
+				setValue(suggestionConverter.toItem(suggestion), true);
 			}
 		}
 	}
@@ -118,13 +134,13 @@ public class SuggestField<T> extends AbstractField<T> implements
 			if (getTokenMode() && tokenHandler != null) {
 				tokenHandler.handleToken(newItemsHandler.addNewItem(suggestion));
 			} else {
-				setValue((T) newItemsHandler.addNewItem(suggestion));
+				setValue(newItemsHandler.addNewItem(suggestion));
 			}
 		}
 	}
 	
 	@Override
-	protected void doSetValue(Object newValue) {
+	protected void doSetValue(T newValue) {
 		/*
 		 * This allows for a new value to be sent to client if setValue was called before selecting suggestion
 		 * This must be here for BeanFieldGroup to work.
@@ -141,6 +157,13 @@ public class SuggestField<T> extends AbstractField<T> implements
 		}
 	}
 	
+	/** Returns the currently set value
+	 */
+	@Override
+	public T getValue()
+	{
+		return suggestionConverter.toItem(getState().value);
+	}
 
 	public void setDelay(int delayMillis) {
 		getState().delayMillis = delayMillis;
@@ -243,7 +266,7 @@ public class SuggestField<T> extends AbstractField<T> implements
 		super.focus();
 	}
     
-    public void setSuggestionHandler(SuggestionHandler suggestionHandler) {
+    public void setSuggestionHandler(SuggestionHandler<T> suggestionHandler) {
     	this.suggestionHandler = suggestionHandler;
     }
 
@@ -260,35 +283,42 @@ public class SuggestField<T> extends AbstractField<T> implements
 		
 	}
 	
-	public SuggestionConverter getSuggestionConverter() {
+	public SuggestionConverter<T> getSuggestionConverter() {
 		return suggestionConverter;
 	}
 
-	public void setSuggestionConverter(SuggestionConverter suggestionConverter) {
+	public void setSuggestionConverter(SuggestionConverter<T> suggestionConverter) {
 		this.suggestionConverter = suggestionConverter;
 	}
 
-	public NewItemsHandler getNewItemsHandler() {
+	public NewItemsHandler<T> getNewItemsHandler() {
 		return newItemsHandler;
 	}
 
-	public void setNewItemsHandler(NewItemsHandler newItemsHandler) {
+	public void setNewItemsHandler(NewItemsHandler<T> newItemsHandler) {
 		this.newItemsHandler = newItemsHandler;
 	}
 
-	public TokenHandler getTokenHandler() {
+	public TokenHandler<T> getTokenHandler() {
 		return tokenHandler;
 	}
 
-	public void setTokenHandler(TokenHandler tokenHandler) {
+	public void setTokenHandler(TokenHandler<T> tokenHandler) {
 		this.tokenHandler = tokenHandler;
 	}
 
-	@Override
-	public T getValue()
-	{
-		return (T) suggestionConverter.toItem(getState().value);
-	}
-
 	
+
+	/** Creates a SuggestField of Type String with the default StringSuggestionConverter set.
+	 * This replaces the default behaviour of the old constructor before Vaadin 8 version.
+	 * 
+	 * @return
+	 */
+	public static SuggestField<String> createDefault()
+	{
+		SuggestField<String> field = new SuggestField<>();
+		field.setSuggestionConverter(new StringSuggestionConverter());
+		
+		return field;
+	}
 }

@@ -23,8 +23,8 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings("serial")
-public class AddressEditor extends CssLayout implements NewItemsHandler,
-		SuggestionHandler, LayoutClickListener, TokenHandler {
+public class AddressEditor extends CssLayout implements NewItemsHandler<String>,
+		SuggestionHandler<String>, LayoutClickListener, TokenHandler<String> {
 
 	private SuggestField<String> suggestField;
 	
@@ -40,7 +40,7 @@ public class AddressEditor extends CssLayout implements NewItemsHandler,
 		addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
 		addStyleName("address-editor");
 
-		suggestField = new SuggestField<>();
+		suggestField = SuggestField.createDefault();
 		suggestField.setNewItemsAllowed(true);
 		suggestField.setNewItemsHandler(this);
 		suggestField.setTokenMode(true);
@@ -72,7 +72,7 @@ public class AddressEditor extends CssLayout implements NewItemsHandler,
 	}
 
 	@Override
-	public Object addNewItem(String newItemText) {
+	public String addNewItem(String newItemText) {
 		if (!validator.apply(newItemText, null).isError()) {
 			addresses.add(newItemText);
 
@@ -81,7 +81,7 @@ public class AddressEditor extends CssLayout implements NewItemsHandler,
 	}
 
 	@Override
-	public List<Object> searchItems(String query) {
+	public List<String> searchItems(String query) {
 
 		if ("".equals(query) || query == null) {
 			return Collections.emptyList();
@@ -97,7 +97,7 @@ public class AddressEditor extends CssLayout implements NewItemsHandler,
 		}
 		System.out.println("Total: " + result.size());
 
-		return new ArrayList<Object>(result);
+		return new ArrayList<String>(result);
 	}
 
 
@@ -111,7 +111,7 @@ public class AddressEditor extends CssLayout implements NewItemsHandler,
 	};
 
 	@Override
-	public void handleToken(Object token) {
+	public void handleToken(String token) {
 		if (token != null) {
 			final String address = (String) token;
 			// Skip duplicates 
