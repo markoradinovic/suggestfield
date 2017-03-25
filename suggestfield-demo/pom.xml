@@ -5,13 +5,14 @@
 	<groupId>org.vaadin</groupId>
 	<artifactId>suggestfield-demo</artifactId>
 	<packaging>war</packaging>
-	<version>0.0.4</version>
+	<version>0.1.0</version>
 	<name>SuggestField Add-on Demo</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<vaadin.version>7.3.10</vaadin.version>
+		<vaadin.version>8.0.2</vaadin.version>
 		<vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
+		<jetty.plugin.version>9.3.9.v20160517</jetty.plugin.version>
 	</properties>
 
     <!--     
@@ -92,6 +93,13 @@
 			<artifactId>vaadin-client-compiler</artifactId>
 			<version>${vaadin.version}</version>
 		</dependency>
+		<!--  We need to exclude this one (set scope provided) for incompabilities with jetty -->
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-dev</artifactId>
+			<version>2.8.0</version>
+			<scope>provided</scope>
+		</dependency>
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-themes</artifactId>
@@ -113,8 +121,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.0</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 
@@ -183,14 +191,14 @@
 				</executions>
 			</plugin>
 
+			<!-- The Jetty plugin allows us to easily test the development build by
+				running jetty:run on the command line. -->
 			<plugin>
-				<groupId>org.mortbay.jetty</groupId>
+				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
-				<version>8.1.10.v20130312</version>
+				<version>${jetty.plugin.version}</version>
 				<configuration>
-					<webApp>
-						<contextPath>/</contextPath>
-					</webApp>
+					<scanIntervalSeconds>2</scanIntervalSeconds>
 				</configuration>
 			</plugin>
 

@@ -11,6 +11,7 @@ import org.vaadin.suggestfield.SuggestField.NewItemsHandler;
 import org.vaadin.suggestfield.SuggestField.SuggestionHandler;
 import org.vaadin.suggestfield.SuggestField.TokenHandler;
 
+import com.vaadin.data.Binder;
 import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
@@ -22,10 +23,12 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings("serial")
-public class AddressEditor extends CssLayout implements NewItemsHandler,
-		SuggestionHandler, LayoutClickListener, TokenHandler {
+public class AddressEditor extends CssLayout implements NewItemsHandler<String>,
+		SuggestionHandler<String>, LayoutClickListener, TokenHandler<String> {
 
-	private SuggestField suggestField;
+	private SuggestField<String> suggestField;
+	
+	private Binder<Adress> binder;
 
 	private List<String> addresses = new LinkedList<String>();
 
@@ -37,10 +40,9 @@ public class AddressEditor extends CssLayout implements NewItemsHandler,
 		addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
 		addStyleName("address-editor");
 
-		suggestField = new SuggestField();
+		suggestField = SuggestField.createDefault();
 		suggestField.setNewItemsAllowed(true);
 		suggestField.setNewItemsHandler(this);
-		suggestField.setImmediate(true);
 		suggestField.setTokenMode(true);
 		suggestField.setSuggestionHandler(this);
 		suggestField.setSuggestionConverter(new StringSuggestionConverter());
@@ -51,6 +53,12 @@ public class AddressEditor extends CssLayout implements NewItemsHandler,
 
 		addLayoutClickListener(this);
 
+		binder = new Binder<>(Adress.class);
+		
+		binder.forField(suggestField)
+			.withValidator(new EmailValidator("Invalid email address"))
+			.bind(Adress::getMail, Adress::setMail);
+		
 		validator = new EmailValidator("Invalid email address");
 	}
 	
@@ -64,8 +72,8 @@ public class AddressEditor extends CssLayout implements NewItemsHandler,
 	}
 
 	@Override
-	public Object addNewItem(String newItemText) {
-		if (validator.isValid(newItemText)) {
+	public String addNewItem(String newItemText) {
+		if (!validator.apply(newItemText, null).isError()) {
 			addresses.add(newItemText);
 
 		}
@@ -73,7 +81,7 @@ public class AddressEditor extends CssLayout implements NewItemsHandler,
 	}
 
 	@Override
-	public List<Object> searchItems(String query) {
+	public List<String> searchItems(String query) {
 
 		if ("".equals(query) || query == null) {
 			return Collections.emptyList();
@@ -89,7 +97,7 @@ public class AddressEditor extends CssLayout implements NewItemsHandler,
 		}
 		System.out.println("Total: " + result.size());
 
-		return new ArrayList<Object>(result);
+		return new ArrayList<String>(result);
 	}
 
 
@@ -103,7 +111,7 @@ public class AddressEditor extends CssLayout implements NewItemsHandler,
 	};
 
 	@Override
-	public void handleToken(Object token) {
+	public void handleToken(String token) {
 		if (token != null) {
 			final String address = (String) token;
 			// Skip duplicates 
@@ -131,10 +139,10 @@ public class AddressEditor extends CssLayout implements NewItemsHandler,
 				count++;
 				final Button btn = (Button) getComponent(i);
 				final String address = (String) btn.getData();
-				if (!validator.isValid(address)) {
-					valid = false;
-					break;
-				}
+//				if (!validator.isValid(address)) {
+//					valid = false;
+//					break;
+//				}
 			}
 		}
 		if (required && count == 0) {
@@ -175,12 +183,12 @@ public class AddressEditor extends CssLayout implements NewItemsHandler,
 		btn.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_RIGHT);
 		btn.addClickListener(addressRemoveClick);
 
-		if (validator.isValid(address)) {
-			btn.setDescription("Click to remove");
-		} else {
-			btn.addStyleName(ValoTheme.BUTTON_DANGER);
-			btn.setDescription(validator.getErrorMessage());
-		}
+//		if (validator.isValid(address)) {
+//			btn.setDescription("Click to remove");
+//		} else {
+//			btn.addStyleName(ValoTheme.BUTTON_DANGER);
+//			btn.setDescription(validator.getErrorMessage());
+//		}
 		return btn;
 	}
 

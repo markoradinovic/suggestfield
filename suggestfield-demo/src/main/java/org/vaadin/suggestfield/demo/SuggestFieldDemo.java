@@ -12,8 +12,8 @@ import org.vaadin.suggestfield.SuggestField.NewItemsHandler;
 import org.vaadin.suggestfield.SuggestField.SuggestionHandler;
 import org.vaadin.suggestfield.client.SuggestFieldSuggestion;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.data.HasValue;
+import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.event.FieldEvents.BlurEvent;
@@ -33,8 +33,8 @@ public class SuggestFieldDemo extends VerticalLayout {
 
 	long id = 0;
 
-	private final SuggestField search1 = new SuggestField();
-	private final SuggestField search2 = new SuggestField();
+	private final SuggestField<CountryBean> search1 = new SuggestField<>();
+	private final SuggestField<CountryBean> search2 = new SuggestField<>();
 
 	public SuggestFieldDemo() {
 		setStyleName("demoContentLayout");
@@ -118,12 +118,12 @@ public class SuggestFieldDemo extends VerticalLayout {
 		tab.addTab(new Label("Suggest field demo"), "Demo");
 	}
 
-	private void setUpAutocomplete(final SuggestField search) {
+	private void setUpAutocomplete(final SuggestField<CountryBean> search) {
 
-		search.setSuggestionHandler(new SuggestionHandler() {
+		search.setSuggestionHandler(new SuggestionHandler<CountryBean>() {
 
 			@Override
-			public List<Object> searchItems(String query) {
+			public List<CountryBean> searchItems(String query) {
 				System.out.println("Query: " + query);
 				return handleSearchQuery(query);
 			}
@@ -131,23 +131,24 @@ public class SuggestFieldDemo extends VerticalLayout {
 
 		search.setSuggestionConverter(new CountrySuggestionConverter());
 
-		search.addValueChangeListener(new ValueChangeListener() {
+		search.addValueChangeListener(new HasValue.ValueChangeListener<CountryBean>()
+		{
 
 			@Override
-			public void valueChange(ValueChangeEvent event) {
+			public void valueChange(ValueChangeEvent<CountryBean> event)
+			{
 				System.out.println("SuugestField value changed");
 				Notification.show("Selected " + search.getValue());
-
 			}
 		});
 
 		/*
 		 * Allowing new items
 		 */
-		search.setNewItemsHandler(new NewItemsHandler() {
+		search.setNewItemsHandler(new NewItemsHandler<CountryBean>() {
 
 			@Override
-			public Object addNewItem(String newItemText) {
+			public CountryBean addNewItem(String newItemText) {
 				final CountryBean newValue = new CountryBean(id++, newItemText);
 				items.add(newValue);
 				return newValue;
@@ -177,7 +178,7 @@ public class SuggestFieldDemo extends VerticalLayout {
 		Notification.show("Selected " + suggestion);
 	}
 
-	private List<Object> handleSearchQuery(String query) {
+	private List<CountryBean> handleSearchQuery(String query) {
 		if ("".equals(query) || query == null) {
 			return Collections.emptyList();
 		}
@@ -190,20 +191,23 @@ public class SuggestFieldDemo extends VerticalLayout {
 		}
 		System.out.println("Total: " + result.size());
 
-		return new ArrayList<Object>(result);
+		return new ArrayList<CountryBean>(result);
 	}
 
 	private List<CountryBean> items = new ArrayList<CountryBean>();
 
-	private class CountrySuggestionConverter extends BeanSuggestionConverter {
+	private class CountrySuggestionConverter extends BeanSuggestionConverter<CountryBean> {
 
 		public CountrySuggestionConverter() {
 			super(CountryBean.class, "id", "name", "name");
 		}
 
 		@Override
-		public Object toItem(SuggestFieldSuggestion suggestion) {
+		public CountryBean toItem(SuggestFieldSuggestion suggestion) {
 			CountryBean result = null;
+			if ( suggestion == null )
+				return null;
+			
 			for (CountryBean bean : items) {
 				if (bean.getId().toString().equals(suggestion.getId())) {
 					result = bean;

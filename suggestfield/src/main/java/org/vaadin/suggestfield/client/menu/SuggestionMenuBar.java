@@ -624,6 +624,9 @@ public class SuggestionMenuBar extends Widget {
 		// Hide focus outline in Mozilla/Webkit/Opera
 		getElement().getStyle().setProperty("outline", "0px");
 
+		// Set to inline-box
+		getElement().getStyle().setProperty("display", "inline-block");
+		
 		// Hide focus outline in IE 6/7
 		getElement().setAttribute("hideFocus", "true");
 
