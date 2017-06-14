@@ -32,6 +32,7 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
@@ -559,6 +560,12 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 		return popup.isShowing();
 	}
 
+	@Override
+	protected void onDetach() {
+		super.onDetach();
+		popup.hide();
+	}
+
 	/*
 	 * 
 	 * ==========================================================================
@@ -578,9 +585,9 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 
 		@SuppressWarnings("deprecation")
 		public SuggestionPopup() {
-			super(true, true, true);
+			setStyleName("v-filterselect-suggestpopup");
+			sinkEvents(Event.ONCLICK);
 			getElement().getStyle().setZIndex(Z_INDEX);
-			setStylePrimaryName("v-filterselect-suggestpopup");
 			Roles.getListRole().set(getElement());
 			setOwner(VSuggestField.this);
 			addCloseHandler(this);
