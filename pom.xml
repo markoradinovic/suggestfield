@@ -14,7 +14,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<vaadin.version>8.0.2</vaadin.version>
+		<vaadin.version>8.1.0.rc1</vaadin.version>
 		<vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
 
 		<!-- ZIP Manifest fields -->
@@ -51,6 +51,23 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
+	
+	<repositories>
+		<repository>
+		    <id>vaadin-prereleases</id>
+		    <name>Vaadin Pre-releases</name>
+		    <url>https://maven.vaadin.com/vaadin-prereleases</url>
+	 	</repository>
+	</repositories>
+	
+	<!-- Repository für die Plugins -->
+	<pluginRepositories>
+		<pluginRepository>
+		    <id>vaadin-prereleases</id>
+		    <name>Vaadin Pre-releases</name>
+		    <url>https://maven.vaadin.com/vaadin-prereleases</url>
+		</pluginRepository>
+	</pluginRepositories>
 	
 	<build>
 		<plugins>
