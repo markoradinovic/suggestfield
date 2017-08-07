@@ -1,10 +1,12 @@
-# SuggestField Add-on for Vaadin 7
+# SuggestField Add-on for Vaadin 8
 
-SuggestField is an UI component add-on for Vaadin 7.
+SuggestField is an UI component Add-on for Vaadin 8.
+
+**Important:** This is a fork that currently supports this Add-on for the released Vaadin 8.1.0.
 
 ## Download release
 
-Official releases of this add-on are available at Vaadin Directory. For Maven instructions, download and reviews, go to http://vaadin.com/addon/suggestfield
+Official releases of this Add-on are available at Vaadin Directory. For Maven instructions, download and reviews, go to https://vaadin.com/directory#!addon/suggestfield-add-on
 
 ## Building and running demo
 
@@ -17,7 +19,7 @@ To see the demo, navigate to http://localhost:8080/
 
 ## Development with Eclipse IDE
 
-For further development of this add-on, the following tool-chain is recommended:
+For further development of this Add-on, the following Toolchain is recommended:
 - Eclipse IDE
 - m2e wtp plug-in (install it from Eclipse Marketplace)
 - Vaadin Eclipse plug-in (install it from Eclipse Marketplace)
@@ -58,6 +60,22 @@ Another way of debugging client-side is superdev mode. To enable it, uncomment d
 
 ### Version 0.0.4
 - Added TokenMode
+
+### Version 0.0.5-FOC2
+- bump Vaadin version 7.3.10 to 8.0.0.beta1
+
+### Version 0.0.5-FOC3
+- moved Apache 2 license in pom
+
+### Version 0.0.5-FOC4
+- fixed set null state
+
+### Version 0.0.5-FOC5
+- fixed AssertionError when setting null value
+- bump Vaadin version 8.0.2 to 8.1.0.rc1
+
+### Version 0.0.5-FOC6
+- Updated to Vaadin release 8.1.0
 
 
 ## Roadmap
