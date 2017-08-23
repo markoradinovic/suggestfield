@@ -153,7 +153,7 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 	}
 
 	/*
-	 * After suggestions is loaded from server, diplay popup
+	 * After suggestions are loaded from server, display popup.
 	 */
 	public void setSuggestions(List<SuggestFieldSuggestion> suggestions) {
 		this.suggestions = Collections.unmodifiableList(suggestions);
@@ -289,7 +289,7 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 		if (event.getNativeEvent().getKeyCode() == keyCode) {
 			event.isAnyModifierKeyDown();
 			
-			//modifiers
+			// modifiers
 			if (modifierKeys.length > 0) {
 				/*
 				 *  public static final int SHIFT = 16;
@@ -362,8 +362,7 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 				// Hide the popup before we manipulate the menu within it.
 				// If we do not
 				// do this, some browsers will redraw the popup as items are
-				// removed
-				// and added to the menu.
+				// removed and added to the menu.
 				if (popup.isAttached()) {
 					popup.hide();
 				}
@@ -430,7 +429,6 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 	}
 	
 	/*
-	 * 
 	 * Used by connector
 	 */
 	public void setFindSuggestionsListener(FindSuggestionsListener listener) {

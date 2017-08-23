@@ -636,7 +636,6 @@ public class SuggestionMenuBar extends Widget {
 		}, BlurEvent.getType());
 	}
 
-
 	/**
 	 * Removes the specified item from the {@link MenuBar} and the physical DOM
 	 * structure.

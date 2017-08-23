@@ -4,7 +4,7 @@ import org.vaadin.suggestfield.SuggestField.SuggestionConverter;
 import org.vaadin.suggestfield.client.SuggestFieldSuggestion;
 
 /**
- * Simple converter that uses {@link String} items
+ * Simple converter that uses {@link String} items.
  * 
  * @author markoradinovic
  *

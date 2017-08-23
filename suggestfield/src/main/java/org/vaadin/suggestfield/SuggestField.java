@@ -28,7 +28,8 @@ public class SuggestField extends AbstractField<Object> implements
 	public interface SuggestionHandler extends Serializable {
 		
 		/**
-		 * Provide suggestions based on query string
+		 * Provide suggestions based on query string.
+		 * 
 		 * @param query Search string
 		 * @return list of Items
 		 */
@@ -37,7 +38,8 @@ public class SuggestField extends AbstractField<Object> implements
 	
 	public interface NewItemsHandler extends Serializable {
 		/**
-		 * Provide new suggestion based on newItemText
+		 * Provide new suggestion based on newItemText.
+		 * 
 		 * @param newItemText typed by user
 		 * @return new Item
 		 */
@@ -86,7 +88,7 @@ public class SuggestField extends AbstractField<Object> implements
 	}
 
 	/**
-	 * ServerRpc
+	 * ServerRpc.
 	 */
 	public void searchSuggestions(String query) {
 		List<SuggestFieldSuggestion> suggestions = new ArrayList<SuggestFieldSuggestion>();
@@ -195,7 +197,7 @@ public class SuggestField extends AbstractField<Object> implements
 	
 	/**
 	 * Set width of popup. Width must be in <code>px</code>. For auto-width set <code>0</code> value.
-	 * @param width Popup Width in px
+	 * @param width Popup width in px
 	 */
 	public void setPopupWidth(int width) {
 		if (width == 0) {

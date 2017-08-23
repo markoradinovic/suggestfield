@@ -82,7 +82,7 @@ Another way of debugging client-side is superdev mode. To enable it, uncomment d
 
 ### Version 0.0.5-FOC8
 - Updated to Vaadin release 8.1.2
-
+- code cleanup (removed unused imports, cleaned up warnings in Eclipse and Javadoc)
 
 ## Roadmap
 
