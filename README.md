@@ -80,6 +80,10 @@ Another way of debugging client-side is superdev mode. To enable it, uncomment d
 ### Version 0.0.5-FOC7
 - Updated to Vaadin release 8.1.1
 
+### Version 0.0.5-FOC8
+- Updated to Vaadin release 8.1.2
+
+
 ## Roadmap
 
 This component is developed as a hobby with no public roadmap or any guarantees of upcoming releases.
