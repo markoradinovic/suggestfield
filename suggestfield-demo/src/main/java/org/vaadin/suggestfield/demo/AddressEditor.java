@@ -15,7 +15,7 @@ import com.vaadin.data.ValidationResult;
 import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
-import com.vaadin.server.FontAwesome;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
@@ -159,7 +159,7 @@ public class AddressEditor extends CssLayout implements NewItemsHandler,
 	}
 
 	private Button generateToken(String address) {
-		final Button btn = new Button(address, FontAwesome.TIMES);
+		final Button btn = new Button(address, VaadinIcons.CLOSE);
 		btn.setData(address);
 		btn.addStyleName(ValoTheme.BUTTON_SMALL);
 		btn.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_RIGHT);
