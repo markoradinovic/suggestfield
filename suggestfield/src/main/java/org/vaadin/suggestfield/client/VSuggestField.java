@@ -50,8 +50,8 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.VTextField;
-import com.vaadin.client.widgets.Overlay;
 
+@SuppressWarnings("deprecation") // deprecated for Vaadin use only. directly used anyway - therefore we suppress the warning.
 public class VSuggestField extends Composite implements HasText, Focusable,
 		HasEnabled, HasAllKeyHandlers, HasValue<String>,
 		HasSelectionHandlers<Suggestion>, IsEditor<LeafValueEditor<String>> {
@@ -66,7 +66,7 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 	}
 
 	/**
-	 * Callback for Connector
+	 * Callback for Connector.
 	 */
 	public interface FindSuggestionsListener {
 		void findSuggestions(String query);
@@ -107,7 +107,7 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 	};
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 */
 	public VSuggestField() {
 		box = GWT.create(VTextField.class);
@@ -566,8 +566,7 @@ public class VSuggestField extends Composite implements HasText, Focusable,
 	 */
 
 	/**
-	 * SuggestField Popup
-	 *
+	 * SuggestField Popup.
 	 */
 	public class SuggestionPopup extends VOverlay implements PositionCallback,
 			CloseHandler<PopupPanel> {

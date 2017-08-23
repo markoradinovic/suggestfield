@@ -26,8 +26,7 @@ public class SuggestionMenuItem extends UIObject implements HasHTML,
 	
 	public SuggestionMenuItem(Suggestion suggestion, boolean asHTML) {
 		this(suggestion.getDisplayString(), asHTML);
-		// Each suggestion should be placed in a single row in the
-		// suggestion
+		// Each suggestion should be placed in a single row in the suggestion
 		// menu. If the window is resized and the suggestion cannot fit on a
 		// single row, it should be clipped (instead of wrapping around and
 		// taking up a second row).
@@ -66,7 +65,6 @@ public class SuggestionMenuItem extends UIObject implements HasHTML,
 	public SuggestionMenuItem(SafeHtml html, ScheduledCommand cmd) {
 		this(html.asString(), true, cmd);
 	}
-
 
 	/**
 	 * Constructs a new menu item that fires a command when it is selected.
@@ -180,10 +178,11 @@ public class SuggestionMenuItem extends UIObject implements HasHTML,
 
 	/**
 	 * Sets the command associated with this item.
-	 *
+	 * 
 	 * @param cmd
 	 *            the command to be associated with this item
-	 * @deprecated use {@link #setScheduledCommand(ScheduledCommand)} instead
+	 *            
+	 * @deprecated use {@link #setScheduledCommand(com.google.gwt.core.client.Scheduler.ScheduledCommand)} instead
 	 */
 	@Deprecated
 	public void setCommand(Command cmd) {
@@ -216,7 +215,7 @@ public class SuggestionMenuItem extends UIObject implements HasHTML,
 	 * @param cmd
 	 *            the scheduled command to be associated with this item
 	 */
-	public void setScheduledCommand(ScheduledCommand cmd) {
+	public void setScheduledCommand(com.google.gwt.core.client.Scheduler.ScheduledCommand cmd) {
 		command = cmd;
 	}
 

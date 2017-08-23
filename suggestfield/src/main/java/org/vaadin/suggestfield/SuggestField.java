@@ -235,12 +235,12 @@ public class SuggestField extends AbstractField<Object> implements
     /**
      * Set ShortCut keys combination to be handled on client side. <br>
      * ShortCut has same effect as Enter of Tab key. <br>
-     * To disable ShorCut set values <code>-1, new int[0]</code> <br>
+     * To disable ShortCut set values <code>-1, new int[0]</code> <br>
      * Example <br>
      * <code>setShortCut(ShortcutAction.KeyCode.S, new int[] { ShortcutAction.ModifierKey.CTRL })</code>
      * 
-     * @param keyCode
-     * @param modifierKeys
+     * @param keyCode the keyCode the ShortCut should use
+     * @param modifierKeys the modifier keys that are added to the keyCode
      */
     public void setShortCut(int keyCode, int... modifierKeys) {
     	getState().keyCode = keyCode;
