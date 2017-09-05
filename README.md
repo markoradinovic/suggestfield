@@ -84,6 +84,10 @@ Another way of debugging client-side is superdev mode. To enable it, uncomment d
 - Updated to Vaadin release 8.1.2
 - code cleanup (removed unused imports, cleaned up warnings in Eclipse and Javadoc)
 
+### Version 0.0.5-FOC9
+- Updated to Vaadin release 8.1.3
+
+
 ## Roadmap
 
 This component is developed as a hobby with no public roadmap or any guarantees of upcoming releases.
