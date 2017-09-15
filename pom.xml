@@ -4,7 +4,7 @@
 	<groupId>org.vaadin</groupId>
 	<artifactId>suggestfield-root</artifactId>
 	<packaging>pom</packaging>
-	<version>0.0.5-FOC10</version>
+	<version>0.0.5-FOC11-SNAPSHOT</version>
 	<name>SuggestField Add-on Root Project</name>
 
 	<modules>
@@ -34,7 +34,7 @@
 
 	<scm>
 		<developerConnection>scm:git:git@github.com:FOCONIS/suggestfield.git</developerConnection>
-		<tag>v0.0.5-FOC10</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<distributionManagement>
