@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.vaadin</groupId>
 		<artifactId>suggestfield-root</artifactId>
-		<version>0.0.5-FOC12-SNAPSHOT</version>
+		<version>0.0.5-FOC12</version>
 	</parent>
 
 	<artifactId>suggestfield</artifactId>
