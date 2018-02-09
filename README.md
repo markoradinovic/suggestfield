@@ -2,7 +2,7 @@
 
 SuggestField is an UI component Add-on for Vaadin 8.
 
-**Important:** This is a fork that currently supports this Add-on for the released Vaadin 8.2.1.
+**Important:** This is a fork that currently supports this Add-on for the released Vaadin 8.3.1.
 
 ## Download release
 
@@ -101,6 +101,9 @@ Another way of debugging client-side is superdev mode. To enable it, uncomment d
 
 ### Version 0.0.5-FOC14
 - Updated to Vaadin release 8.2.1
+
+### Version 0.0.5-FOC15
+- Updated to Vaadin release 8.3.1
 
 ## Roadmap
 
