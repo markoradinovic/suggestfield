@@ -110,7 +110,7 @@ public class SuggestField extends AbstractField<Object> implements
 			if (getTokenMode() && tokenHandler != null) {
 				tokenHandler.handleToken(suggestionConverter.toItem(suggestion));
 			} else {
-				setValue(suggestionConverter.toItem(suggestion), false);
+				setValue(suggestionConverter.toItem(suggestion), true);
 			}
 		}
 	}
