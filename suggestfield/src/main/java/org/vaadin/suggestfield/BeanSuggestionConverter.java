@@ -1,5 +1,6 @@
 package org.vaadin.suggestfield;
 
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -7,14 +8,14 @@ import org.vaadin.suggestfield.SuggestField.SuggestionConverter;
 import org.vaadin.suggestfield.client.SuggestFieldSuggestion;
 
 @SuppressWarnings("serial")
-public abstract class BeanSuggestionConverter implements SuggestionConverter {
+public abstract class BeanSuggestionConverter<T extends Serializable> implements SuggestionConverter<T> {
 
-	private final Class<? extends Object> itemClass;
+	private final Class<T> itemClass;
 	private final String idPropertyName;
 	private final String displayPropertyName;
 	private final String replacementPropertyName;
 
-	public BeanSuggestionConverter(Class<? extends Object> itemClass,
+	public BeanSuggestionConverter(Class<T> itemClass,
 			String idPropertyName, String displayPropertyName,
 			String replacementPropertyName) {
 		assert itemClass != null : "Item Class cannot be null";
@@ -28,19 +29,16 @@ public abstract class BeanSuggestionConverter implements SuggestionConverter {
 	}
 
 	@Override
-	public SuggestFieldSuggestion toSuggestion(Object item) {
+	public SuggestFieldSuggestion toSuggestion(T item) {
 		if (item == null) {
 			return new SuggestFieldSuggestion("-1", "", "");
 		} else {
-			return new SuggestFieldSuggestion(getItemPropertyValue(
-					idPropertyName, item), getItemPropertyValue(
-					displayPropertyName, item), getItemPropertyValue(
-					replacementPropertyName, item));
+			return new SuggestFieldSuggestion(
+					getItemPropertyValue(idPropertyName, item), 
+					getItemPropertyValue(displayPropertyName, item), 
+					getItemPropertyValue(replacementPropertyName, item));
 		}
 	}
-
-	@Override
-	public abstract Object toItem(SuggestFieldSuggestion suggestion);
 
 	private String getItemPropertyValue(String property, Object item) {
 		try {
@@ -52,15 +50,9 @@ public abstract class BeanSuggestionConverter implements SuggestionConverter {
 				throw new IllegalArgumentException("Bean property '" + property
 						+ "' cannot be null");
 			}
-		} catch (final java.lang.NoSuchMethodException e) {
+		} catch (final java.lang.NoSuchMethodException|IllegalAccessException|InvocationTargetException e) {
 			throw new IllegalArgumentException("Bean property '" + property
-					+ "' not found", e);
-		} catch (IllegalAccessException e) {
-			throw new IllegalArgumentException("Bean property '" + property
-					+ "' not found", e);
-		} catch (InvocationTargetException e) {
-			throw new IllegalArgumentException("Bean property '" + property
-					+ "' not found", e);
+					+ "' not found or inaccessible", e);
 		}
 	}
 
@@ -82,15 +74,12 @@ public abstract class BeanSuggestionConverter implements SuggestionConverter {
 
 		Method getMethod = null;
 		try {
-			getMethod = beanClass.getMethod("get" + propertyName,
-					new Class[] {});
+			getMethod = beanClass.getMethod("get" + propertyName);
 		} catch (final java.lang.NoSuchMethodException ignored) {
 			try {
-				getMethod = beanClass.getMethod("is" + propertyName,
-						new Class[] {});
+				getMethod = beanClass.getMethod("is" + propertyName);
 			} catch (final java.lang.NoSuchMethodException ignoredAsWell) {
-				getMethod = beanClass.getMethod("are" + propertyName,
-						new Class[] {});
+				getMethod = beanClass.getMethod("are" + propertyName);
 			}
 		}
 		return getMethod;

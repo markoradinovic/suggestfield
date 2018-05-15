@@ -19,13 +19,13 @@ import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component.Focusable;
 
 @SuppressWarnings("serial")
-public class SuggestField extends AbstractField<Object> implements
+public class SuggestField<T extends Serializable> extends AbstractField<T> implements
 		SuggestFieldServerRpc, Focusable {
 	
 	/**
 	 * This handler must be implemented.
 	 */
-	public interface SuggestionHandler extends Serializable {
+	public interface SuggestionHandler<T extends Serializable> extends Serializable {
 		
 		/**
 		 * Provide suggestions based on query string.
@@ -33,28 +33,28 @@ public class SuggestField extends AbstractField<Object> implements
 		 * @param query Search string
 		 * @return list of Items
 		 */
-		public List<Object> searchItems(String query);
+		public List<T> searchItems(String query);
 	}
 	
-	public interface NewItemsHandler extends Serializable {
+	public interface NewItemsHandler<T extends Serializable> extends Serializable {
 		/**
 		 * Provide new suggestion based on newItemText.
 		 * 
 		 * @param newItemText typed by user
 		 * @return new Item
 		 */
-		public Object addNewItem(String newItemText);
+		public T addNewItem(String newItemText);
 	}
 	
-	public interface SuggestionConverter extends Serializable {
+	public interface SuggestionConverter<T extends Serializable> extends Serializable {
 		
-		public SuggestFieldSuggestion toSuggestion(Object item);
+		public SuggestFieldSuggestion toSuggestion(T item);
 		
-		public Object toItem(SuggestFieldSuggestion suggestion);
+		public T toItem(SuggestFieldSuggestion suggestion);
 	}
 	
-	public interface TokenHandler extends Serializable {
-		public void handleToken(Object token);
+	public interface TokenHandler<T extends Serializable> extends Serializable {
+		public void handleToken(T token);
 	}
 	
 	FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(this) {
@@ -67,38 +67,44 @@ public class SuggestField extends AbstractField<Object> implements
 		}
 	};
 	
-	private SuggestionConverter suggestionConverter = new StringSuggestionConverter();
-	private SuggestionHandler suggestionHandler;
-	private NewItemsHandler newItemsHandler;
-	private TokenHandler tokenHandler;
+	private SuggestionConverter<T> suggestionConverter;
+	private SuggestionHandler<T> suggestionHandler;
+	private NewItemsHandler<T> newItemsHandler;
+	private TokenHandler<T> tokenHandler;
 
-	public SuggestField() {
+	public SuggestField(SuggestionConverter<T> suggestionConverter) {
+		this.suggestionConverter = suggestionConverter;
 		registerRpc(this, SuggestFieldServerRpc.class);
 		registerRpc(focusBlurRpc);
 	}
+	
+	public static SuggestField<String> forString() {
+		return new SuggestField<>(new StringSuggestionConverter());
+	}
 
 	@Override
-	protected SuggestFieldState getState() {
-		return (SuggestFieldState) super.getState();
+	@SuppressWarnings("unchecked")
+	protected SuggestFieldState<T> getState() {
+		return (SuggestFieldState<T>) super.getState();
 	}
 	
 	@Override
-	protected SuggestFieldState getState(boolean markAsDirty) {
-		return (SuggestFieldState) super.getState(markAsDirty);
+	@SuppressWarnings("unchecked")
+	protected SuggestFieldState<T> getState(boolean markAsDirty) {
+		return (SuggestFieldState<T>) super.getState(markAsDirty);
 	}
 
 	/**
 	 * ServerRpc.
 	 */
 	public void searchSuggestions(String query) {
-		List<SuggestFieldSuggestion> suggestions = new ArrayList<SuggestFieldSuggestion>();
+		List<SuggestFieldSuggestion> suggestions = new ArrayList<>();
 		if (suggestionHandler != null && suggestionConverter != null) {
-			List<Object> searchResult = suggestionHandler.searchItems(query);
-			if (searchResult == null) {
-				searchResult = new ArrayList<>();
-			}
-			for (Object result : searchResult) {
-				suggestions.add(suggestionConverter.toSuggestion(result));
+			List<T> searchResult = suggestionHandler.searchItems(query);
+			if (searchResult != null) {
+				for (T result : searchResult) {
+					suggestions.add(suggestionConverter.toSuggestion(result));
+				}
 			}
 		}
 		getRpcProxy(SuggestFieldClientRpc.class).setSuggusetion(suggestions);
@@ -127,12 +133,12 @@ public class SuggestField extends AbstractField<Object> implements
 	}
 	
 	@Override
-	public Object getValue() {
+	public T getValue() {
 		return getState(false).value;
 	}
 
 	@Override
-	protected void doSetValue(Object newValue) {
+	protected void doSetValue(T newValue) {
 		/*
 		 * This allows for a new value to be sent to client if setValue was called before selecting suggestion
 		 * This must be here for BeanFieldGroup to work.
@@ -254,31 +260,31 @@ public class SuggestField extends AbstractField<Object> implements
 		super.focus();
 	}
     
-    public void setSuggestionHandler(SuggestionHandler suggestionHandler) {
+    public void setSuggestionHandler(SuggestionHandler<T> suggestionHandler) {
     	this.suggestionHandler = suggestionHandler;
     }
 
-	public SuggestionConverter getSuggestionConverter() {
+	public SuggestionConverter<T> getSuggestionConverter() {
 		return suggestionConverter;
 	}
 
-	public void setSuggestionConverter(SuggestionConverter suggestionConverter) {
+	public void setSuggestionConverter(SuggestionConverter<T> suggestionConverter) {
 		this.suggestionConverter = suggestionConverter;
 	}
 
-	public NewItemsHandler getNewItemsHandler() {
+	public NewItemsHandler<T> getNewItemsHandler() {
 		return newItemsHandler;
 	}
 
-	public void setNewItemsHandler(NewItemsHandler newItemsHandler) {
+	public void setNewItemsHandler(NewItemsHandler<T> newItemsHandler) {
 		this.newItemsHandler = newItemsHandler;
 	}
 
-	public TokenHandler getTokenHandler() {
+	public TokenHandler<T> getTokenHandler() {
 		return tokenHandler;
 	}
 
-	public void setTokenHandler(TokenHandler tokenHandler) {
+	public void setTokenHandler(TokenHandler<T> tokenHandler) {
 		this.tokenHandler = tokenHandler;
 	}
 	
