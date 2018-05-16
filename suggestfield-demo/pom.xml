@@ -44,7 +44,7 @@
 			<id>vaadin-addons</id>
 			<url>http://maven.vaadin.com/vaadin-addons</url>
 		</repository>
-		<repository>
+<!-- 		<repository>
 			<id>vaadin-snapshots</id>
 			<url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
 			<releases>
@@ -53,10 +53,10 @@
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
-		</repository>
+		</repository> -->
 	</repositories>
 
-	<pluginRepositories>
+<!-- 	<pluginRepositories>
 		<pluginRepository>
 			<id>vaadin-snapshots</id>
 			<url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
@@ -67,7 +67,7 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</pluginRepository>
-	</pluginRepositories>
+	</pluginRepositories> -->
 
 	<dependencies>
 		<dependency>
@@ -192,10 +192,17 @@
 				</executions>
 			</plugin>
 
+
+			<!--
+				ensure, you have the following entry in your ~/.m2/settings.xml 
+			    <pluginGroups>
+        			<pluginGroup>org.eclipse.jetty</pluginGroup>
+			    </pluginGroups>
+			 -->
 			<plugin>
-				<groupId>org.mortbay.jetty</groupId>
-				<artifactId>jetty-maven-plugin</artifactId>
-				<version>8.1.10.v20130312</version>
+				  <groupId>org.eclipse.jetty</groupId>
+				  <artifactId>jetty-maven-plugin</artifactId>
+				  <version>9.4.10.v20180503</version>
 				<configuration>
 					<webApp>
 						<contextPath>/</contextPath>

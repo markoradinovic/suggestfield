@@ -7,14 +7,9 @@ import java.util.List;
 
 import org.vaadin.suggestfield.StringSuggestionConverter;
 import org.vaadin.suggestfield.SuggestField;
-import org.vaadin.suggestfield.SuggestField.NewItemsHandler;
-import org.vaadin.suggestfield.SuggestField.SuggestionHandler;
-import org.vaadin.suggestfield.SuggestField.TokenHandler;
 
 import com.vaadin.data.ValidationResult;
 import com.vaadin.data.validator.EmailValidator;
-import com.vaadin.event.LayoutEvents.LayoutClickEvent;
-import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.Button;
@@ -22,64 +17,61 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings("serial")
-public class AddressEditor extends CssLayout implements NewItemsHandler,
-		SuggestionHandler, LayoutClickListener, TokenHandler {
+public class AddressEditor extends CssLayout  {
 
-	private SuggestField suggestField;
+	private SuggestField<String> suggestField;
 
 	private List<String> addresses = new LinkedList<String>();
 
 	private EmailValidator validator;
 
 	private Registration addressRemoveRegistration;
-	
+
 	public AddressEditor() {
 		super();
 		setWidth("100%");
 		addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
 		addStyleName("address-editor");
 
-		suggestField = new SuggestField();
+		suggestField = SuggestField.forString();
 		suggestField.setNewItemsAllowed(true);
-		suggestField.setNewItemsHandler(this);
+		suggestField.setNewItemsHandler(newItemText->{
+			if (!validator.apply(newItemText, null).isError()) {
+				addresses.add(newItemText);
+			}
+			return newItemText;
+		});
 		suggestField.setTokenMode(true);
-		suggestField.setSuggestionHandler(this);
-		suggestField.setSuggestionConverter(new StringSuggestionConverter());
-		suggestField.setTokenHandler(this);
+		suggestField.setSuggestionHandler(this::searchItems);
+		suggestField.setTokenHandler(token->{
+			if (token != null) {
+				final String address = (String) token;
+				// Skip duplicates 
+				if (!getValue().contains(address)) {
+					addToken(generateToken(address));
+				}
+			}
+		});
 		suggestField.setWidth("250px");
 		suggestField.setPopupWidth(400);
 		addComponent(suggestField);
 
-		addLayoutClickListener(this);
+		addLayoutClickListener(event->{
+			if (event.getClickedComponent() == null) {
+				suggestField.focus();
+			}
+		});
 
 		validator = new EmailValidator("Invalid email address");
 	}
-	
 
-	@Override
-	public void layoutClick(LayoutClickEvent event) {
-		if (event.getClickedComponent() == null) {
-			suggestField.focus();
-		}
-
-	}
-
-	@Override
-	public String addNewItem(String newItemText) {
-		if (!validator.apply(newItemText, null).isError()) {
-			addresses.add(newItemText);
-		}
-		return newItemText;
-	}
-
-	@Override
-	public List<Object> searchItems(String query) {
+	private List<String> searchItems(String query) {
 
 		if ("".equals(query) || query == null) {
 			return Collections.emptyList();
 		}
 		List<String> result = new ArrayList<String>();
-		
+
 		int count = 0;
 		for (String address : addresses) {
 			if (address.toLowerCase().startsWith(query.toLowerCase()) && count < 10) {
@@ -90,17 +82,6 @@ public class AddressEditor extends CssLayout implements NewItemsHandler,
 		System.out.println("Total: " + result.size());
 
 		return new ArrayList<>(result);
-	}
-
-	@Override
-	public void handleToken(Object token) {
-		if (token != null) {
-			final String address = (String) token;
-			// Skip duplicates 
-			if (!getValue().contains(address)) {
-				addToken(generateToken(address));
-			}
-		}
 	}
 
 	private void clearAddresses() {
@@ -165,11 +146,11 @@ public class AddressEditor extends CssLayout implements NewItemsHandler,
 		btn.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_RIGHT);
 		addressRemoveRegistration = btn.addClickListener(event -> {
 			AddressEditor.this.removeComponent(event.getButton());
-			
+
 		});
 
 		ValidationResult validationResult = validator.apply(address, null);
-		
+
 		if (!validationResult.isError()) {
 			btn.setDescription("Click to remove");
 		} else {
@@ -184,7 +165,7 @@ public class AddressEditor extends CssLayout implements NewItemsHandler,
 		super.setEnabled(enabled);
 		suggestField.setEnabled(enabled);
 	}
-	
+
 	public void setAddresses(List<String> addresses) {
 		this.addresses.clear();
 		this.addresses.addAll(addresses);

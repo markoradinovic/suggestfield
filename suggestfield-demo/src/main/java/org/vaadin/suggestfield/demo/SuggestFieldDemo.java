@@ -1,6 +1,5 @@
 package org.vaadin.suggestfield.demo;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -8,7 +7,6 @@ import java.util.List;
 
 import org.vaadin.suggestfield.BeanSuggestionConverter;
 import org.vaadin.suggestfield.SuggestField;
-import org.vaadin.suggestfield.SuggestField.NewItemsHandler;
 import org.vaadin.suggestfield.client.SuggestFieldSuggestion;
 
 import com.vaadin.event.ShortcutAction;
@@ -30,8 +28,8 @@ public class SuggestFieldDemo extends VerticalLayout {
 
 	long id = 0;
 
-	private final SuggestField search1 = new SuggestField();
-	private final SuggestField search2 = new SuggestField();
+	private final SuggestField<CountryBean> search1 = new SuggestField<>(new CountrySuggestionConverter() );
+	private final SuggestField<CountryBean> search2 = new SuggestField<>(new CountrySuggestionConverter() );
 
 	public SuggestFieldDemo() {
 		setStyleName("demoContentLayout");
@@ -115,14 +113,12 @@ public class SuggestFieldDemo extends VerticalLayout {
 		tab.addTab(new Label("Suggest field demo"), "Demo");
 	}
 
-	private void setUpAutocomplete(final SuggestField search) {
+	private void setUpAutocomplete(final SuggestField<CountryBean> search) {
 
 		search.setSuggestionHandler(query-> {
 				System.out.println("Query: " + query);
 				return handleSearchQuery(query);
 		});
-
-		search.setSuggestionConverter(new CountrySuggestionConverter());
 
 		search.addValueChangeListener( event-> {
 			System.out.println("SuugestField value changed");
@@ -132,14 +128,10 @@ public class SuggestFieldDemo extends VerticalLayout {
 		/*
 		 * Allowing new items
 		 */
-		search.setNewItemsHandler(new NewItemsHandler() {
-
-			@Override
-			public Object addNewItem(String newItemText) {
-				final CountryBean newValue = new CountryBean(id++, newItemText);
-				items.add(newValue);
-				return newValue;
-			}
+		search.setNewItemsHandler(newItemText->{
+			final CountryBean newValue = new CountryBean(id++, newItemText);
+			items.add(newValue);
+			return newValue;
 		});
 		search.setNewItemsAllowed(true);
 
@@ -165,11 +157,11 @@ public class SuggestFieldDemo extends VerticalLayout {
 		Notification.show("Selected " + suggestion);
 	}
 
-	private List<Object> handleSearchQuery(String query) {
+	private List<CountryBean> handleSearchQuery(String query) {
 		if ("".equals(query) || query == null) {
 			return Collections.emptyList();
 		}
-		List<CountryBean> result = new ArrayList<CountryBean>();
+		List<CountryBean> result = new ArrayList<>();
 
 		for (CountryBean country : items) {
 			if (country.getName().toLowerCase().startsWith(query.toLowerCase())) {
@@ -178,19 +170,19 @@ public class SuggestFieldDemo extends VerticalLayout {
 		}
 		System.out.println("Total: " + result.size());
 
-		return new ArrayList<>(result);
+		return result;
 	}
 
 	private List<CountryBean> items = new ArrayList<CountryBean>();
 
-	private class CountrySuggestionConverter extends BeanSuggestionConverter {
+	private class CountrySuggestionConverter extends BeanSuggestionConverter<CountryBean> {
 
 		public CountrySuggestionConverter() {
 			super(CountryBean.class, "id", "name", "name");
 		}
 
 		@Override
-		public Object toItem(SuggestFieldSuggestion suggestion) {
+		public CountryBean toItem(SuggestFieldSuggestion suggestion) {
 			CountryBean result = null;
 			for (CountryBean bean : items) {
 				if (bean.getId().toString().equals(suggestion.getId())) {
@@ -201,43 +193,6 @@ public class SuggestFieldDemo extends VerticalLayout {
 			assert result != null : "This should not be happening";
 			return result;
 		}
-	}
-
-	public static class CountryBean implements Serializable {
-		private Long id;
-		private String name;
-
-		public CountryBean() {
-			// TODO Auto-generated constructor stub
-		}
-
-		public CountryBean(Long id, String name) {
-			super();
-			this.id = id;
-			this.name = name;
-		}
-
-		public Long getId() {
-			return id;
-		}
-
-		public void setId(Long id) {
-			this.id = id;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		@Override
-		public String toString() {
-			return "CountryBean [id=" + id + ", name=" + name + "]";
-		}
-
 	}
 
 	private void buildItems() {
