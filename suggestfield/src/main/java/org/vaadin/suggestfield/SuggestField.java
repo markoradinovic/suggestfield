@@ -67,7 +67,7 @@ public class SuggestField<T extends Serializable> extends AbstractField<T> imple
 		}
 	};
 	
-	private SuggestionConverter<T> suggestionConverter;
+	private final SuggestionConverter<T> suggestionConverter;
 	private SuggestionHandler<T> suggestionHandler;
 	private NewItemsHandler<T> newItemsHandler;
 	private TokenHandler<T> tokenHandler;
@@ -79,19 +79,17 @@ public class SuggestField<T extends Serializable> extends AbstractField<T> imple
 	}
 	
 	public static SuggestField<String> forString() {
-		return new SuggestField<>(new StringSuggestionConverter());
+		return new SuggestField<>(StringSuggestionConverter.DEFAULT_INSTANCE);
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	protected SuggestFieldState<T> getState() {
-		return (SuggestFieldState<T>) super.getState();
+	protected SuggestFieldState getState() {
+		return (SuggestFieldState) super.getState();
 	}
 	
 	@Override
-	@SuppressWarnings("unchecked")
-	protected SuggestFieldState<T> getState(boolean markAsDirty) {
-		return (SuggestFieldState<T>) super.getState(markAsDirty);
+	protected SuggestFieldState getState(boolean markAsDirty) {
+		return (SuggestFieldState) super.getState(markAsDirty);
 	}
 
 	/**
@@ -133,8 +131,9 @@ public class SuggestField<T extends Serializable> extends AbstractField<T> imple
 	}
 	
 	@Override
+	@SuppressWarnings("unchecked")
 	public T getValue() {
-		return getState(false).value;
+		return (T) getState(false).value;
 	}
 
 	@Override
@@ -266,10 +265,6 @@ public class SuggestField<T extends Serializable> extends AbstractField<T> imple
 
 	public SuggestionConverter<T> getSuggestionConverter() {
 		return suggestionConverter;
-	}
-
-	public void setSuggestionConverter(SuggestionConverter<T> suggestionConverter) {
-		this.suggestionConverter = suggestionConverter;
 	}
 
 	public NewItemsHandler<T> getNewItemsHandler() {

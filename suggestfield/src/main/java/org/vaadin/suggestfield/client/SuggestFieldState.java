@@ -5,8 +5,8 @@ import java.io.Serializable;
 import com.vaadin.shared.AbstractFieldState;
 
 @SuppressWarnings("serial")
-public class SuggestFieldState<T extends Serializable> extends AbstractFieldState {
-	public T value = null;
+public class SuggestFieldState extends AbstractFieldState {
+	public Object value = null;
 	public SuggestFieldSuggestion fieldSuggestion = null;
 	public int delayMillis = 300;
 	public String placeHolder = "";

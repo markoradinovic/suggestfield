@@ -50,9 +50,8 @@ public class SuggestFieldConnector<T extends Serializable> extends AbstractField
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public SuggestFieldState<T> getState() {
-		return (SuggestFieldState<T>) super.getState();
+	public SuggestFieldState getState() {
+		return (SuggestFieldState) super.getState();
 	}
 
 	@Override
